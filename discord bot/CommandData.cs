@@ -9,6 +9,7 @@ namespace Bot
     {
         public static void register(Type a, Categories cat)
         {
+            
             classes.Add(a);
             switch (cat)
             {
@@ -25,7 +26,6 @@ namespace Bot
                     break;
             }
         }
-
         public static Task PrepCat()
         {
             Category.Add(Categories.Fun, Fun);

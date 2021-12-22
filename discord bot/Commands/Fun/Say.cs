@@ -12,6 +12,7 @@ namespace Bot.Commands.Fun
         {
             CommandData.register(typeof(Say), Categories.Fun);
         }
+        [RequireBotPermission(Discord.ChannelPermission.SendMessages)]
         [Command("say")]
         [Usage(".Say <message>")]
         [Summary("make bot say what you want it to say")]

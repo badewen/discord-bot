@@ -10,6 +10,7 @@ namespace Bot.Commands.Moderation
 {
     public class Purge : ModuleBase<SocketCommandContext>
     {
+        [RequireBotPermission(Discord.ChannelPermission.ManageMessages)]
         [Command("purge")]
         [Usage(".purge <amount>")]
         [Summary("Delete message under 14 days (ask discord why only under 14 days)")]

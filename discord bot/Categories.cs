@@ -1,4 +1,4 @@
-﻿namespace Bot.Attributes
+﻿namespace Bot
 {
     public enum Categories
     {
