@@ -1,9 +1,9 @@
 ﻿using Bot.Attributes;
+using Discord;
 using Discord.Commands;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using Discord;
+using System.Threading.Tasks;
 
 namespace Bot.Commands.Misc
 {
@@ -24,7 +24,7 @@ namespace Bot.Commands.Misc
             }
             catch
             {
-                ReplyAsync(message: "Cant find taht command" , messageReference: new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
+                ReplyAsync(message: "Cant find taht command", messageReference: new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
             }
 
             return Task.CompletedTask;
@@ -66,12 +66,12 @@ namespace Bot.Commands.Misc
                 gagu.Color = Color.Red;
                 listofcommands.Add(zxc.Name.ToLower(), gagu.Build());
             }
-            foreach(var zxcc in Enum.GetValues(typeof(Categories)))
+            foreach (var zxcc in Enum.GetValues(typeof(Categories)))
             {
                 var Commanddatacat = CommandData.Category[(Categories)zxcc];
                 int conter = 0;
                 string CommandCategoryString = "";
-                foreach(var zbv in CommandData.Category[(Categories)zxcc])
+                foreach (var zbv in CommandData.Category[(Categories)zxcc])
                 {
                     if (conter == 1)
                     {
@@ -84,11 +84,12 @@ namespace Bot.Commands.Misc
                 if (CommandCategoryString == null || CommandCategoryString == "") CommandCategoryString = "None";
                 var embed = new EmbedBuilder().AddField(zxcc.ToString(), CommandCategoryString);
                 embed.Color = Color.Red;
-                listofcommands.Add(zxcc.ToString().ToLower(), embed.Build() );
+                listofcommands.Add(zxcc.ToString().ToLower(), embed.Build());
             }
-            
+
             return Task.CompletedTask;
         }
+
         public Help()
         {
             CommandData.register(typeof(Help), Categories.Misc);

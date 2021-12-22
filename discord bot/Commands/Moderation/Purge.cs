@@ -45,6 +45,7 @@ namespace Bot.Commands.Moderation
               });
             return;
         }
+
         public Purge()
         {
             CommandData.register(typeof(Purge), Categories.Moderation);

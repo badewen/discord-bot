@@ -2,9 +2,6 @@
 
 namespace Bot.Attributes
 {
-    //
-    // Summary:
-    //     Attaches a summary to your command.
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
     public class UsageAttribute : Attribute
     {

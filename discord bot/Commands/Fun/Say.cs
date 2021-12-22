@@ -1,7 +1,6 @@
 ﻿using Bot.Attributes;
 using Discord.Commands;
 using System;
-using Bot;
 using System.Threading.Tasks;
 
 namespace Bot.Commands.Fun
@@ -12,6 +11,7 @@ namespace Bot.Commands.Fun
         {
             CommandData.register(typeof(Say), Categories.Fun);
         }
+
         [RequireBotPermission(Discord.ChannelPermission.SendMessages)]
         [Command("say")]
         [Usage(".Say <message>")]

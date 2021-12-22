@@ -1,5 +1,5 @@
-﻿using Discord;
-using Bot.Commands.Misc;
+﻿using Bot.Commands.Misc;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json.Linq;

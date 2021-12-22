@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Bot;
-using Bot.Attributes;
+﻿using Bot.Attributes;
 using Discord.Commands;
 using Discord.WebSocket;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace discord_bot.Commands.Moderation
+namespace Bot.Commands.Moderation
 {
     public class Ban : ModuleBase<SocketCommandContext>
     {
@@ -24,13 +23,14 @@ namespace discord_bot.Commands.Moderation
             }
             List<ulong> membersId = new();
             List<SocketUser> mentionedUsers = new();
-            _ = Task.Run(() => { 
+            _ = Task.Run(() =>
+            {
                 foreach (var id in member.Split(' '))
                 {
                     try { membersId.Add(Convert.ToUInt64(id)); }
                     catch { continue; }
                 }
-                
+
                 try
                 {
                     foreach (var mentioned in Context.Message.MentionedUsers)
@@ -41,7 +41,8 @@ namespace discord_bot.Commands.Moderation
                 catch { }
                 try
                 {
-                    foreach (var id in membersId) {
+                    foreach (var id in membersId)
+                    {
                         var ika = Context.Guild.GetUser(id);
                         var guh = Context.Guild.GetUser(Context.User.Id);
                         if (ika.Hierarchy > guh.Hierarchy)

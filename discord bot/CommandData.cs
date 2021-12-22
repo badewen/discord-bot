@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Bot.Attributes;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Bot
 {
@@ -9,23 +8,26 @@ namespace Bot
     {
         public static void register(Type a, Categories cat)
         {
-            
             classes.Add(a);
             switch (cat)
             {
                 case Categories.Fun:
                     Fun.Add(a);
                     break;
+
                 case Categories.Misc:
                     Misc.Add(a);
                     break;
+
                 case Categories.Moderation:
                     Moderation.Add(a);
                     break;
+
                 default:
                     break;
             }
         }
+
         public static Task PrepCat()
         {
             Category.Add(Categories.Fun, Fun);
