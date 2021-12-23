@@ -14,9 +14,9 @@ namespace Bot.Commands.Moderation
         [Command("ban")]
         [Summary("ban people (no time support me laptop potato)")]
         [Usage(".ban <mention a member / member Id> ")]
-        public async Task BanAsync([Remainder] string member)
+        public async Task BanAsync([Remainder] string arg)
         {
-            if (member.Length == 0)
+            if (arg.Length == 0)
             {
                 await ReplyAsync("Invalid usage", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
                 return;
@@ -25,7 +25,8 @@ namespace Bot.Commands.Moderation
             List<SocketUser> mentionedUsers = new();
             _ = Task.Run(() =>
             {
-                foreach (var id in member.Split(' '))
+                // loop through members id in the arg
+                foreach (var id in arg.Split(' '))
                 {
                     try { membersId.Add(Convert.ToUInt64(id)); }
                     catch { continue; }
@@ -43,25 +44,33 @@ namespace Bot.Commands.Moderation
                 {
                     foreach (var id in membersId)
                     {
-                        var ika = Context.Guild.GetUser(id);
-                        var guh = Context.Guild.GetUser(Context.User.Id);
-                        if (ika.Hierarchy > guh.Hierarchy)
+                        var target = Context.Guild.GetUser(id);
+                        var author = Context.Guild.GetUser(Context.User.Id);
+                        if (target.Hierarchy > author.Hierarchy)
                         {
                             ReplyAsync("Cant ban people above you", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
                             break;
                         }
-                        else Context.Guild.AddBanAsync(id);
+                        else 
+                        { 
+                            Context.Guild.AddBanAsync(id);
+                            ReplyAsync($"{target.Username}#{target.Discriminator} has been banned");
+                        }
                     }
                     foreach (var mentioned in mentionedUsers)
                     {
-                        var targ = mentioned as SocketGuildUser;
-                        var auth = Context.User as SocketGuildUser;
-                        if (targ.Hierarchy > auth.Hierarchy)
+                        var target = mentioned as SocketGuildUser;
+                        var author = Context.User as SocketGuildUser;
+                        if (target.Hierarchy > author.Hierarchy)
                         {
                             ReplyAsync("Cant ban people above you", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
                             break;
                         }
-                        else Context.Guild.AddBanAsync(mentioned);
+                        else
+                        { 
+                            Context.Guild.AddBanAsync(mentioned);
+                            ReplyAsync($"{target.Username}#{target.Discriminator} has been banned");
+                        }
                     }
                 }
                 catch { ReplyAsync("Something went wrong", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id)); return; }

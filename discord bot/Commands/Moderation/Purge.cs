@@ -13,7 +13,7 @@ namespace Bot.Commands.Moderation
         [RequireBotPermission(Discord.ChannelPermission.ManageMessages)]
         [Command("purge")]
         [Usage(".purge <amount>")]
-        [Summary("Delete message under 14 days (ask discord why only under 14 days)")]
+        [Summary("Delete message under 14 days because discord limitation")]
         [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
         public async Task PurgeAsync(string message)
         {
@@ -28,7 +28,7 @@ namespace Bot.Commands.Moderation
                 return;
             }
 
-            List<Discord.IMessage> a = new();
+            List<Discord.IMessage> messages = new();
 
             _ = Task.Run(() => // used "_" to make ugly green linting gone
               {
@@ -37,10 +37,10 @@ namespace Bot.Commands.Moderation
                   {
                       foreach (var f in c)
                       {
-                          a.Add(f);
+                          messages.Add(f);
                       }
                   }
-                  (Context.Channel as SocketTextChannel).DeleteMessagesAsync(a);
+                  (Context.Channel as SocketTextChannel).DeleteMessagesAsync(messages);
                   ReplyAsync($"messages has been removed", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Message.Channel.Id, Context.Guild.Id));
               });
             return;

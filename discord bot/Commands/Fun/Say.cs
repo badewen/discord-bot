@@ -33,11 +33,5 @@ namespace Bot.Commands.Fun
             ReplyAsync(arg.ToString());
             return Task.CompletedTask;
         }
-
-        public Task a()
-        {
-            Console.WriteLine("Aaaaaaaaaaaaaa");
-            return Task.CompletedTask;
-        }
     }
 }
