@@ -4,43 +4,48 @@ using System.Threading.Tasks;
 
 namespace Bot
 {
-    internal class CommandData
+    public class CommandData
     {
-        public static void register(Type a, Categories cat)
+        public static void register(Type commandClass, Categories cat)
         {
-            classes.Add(a);
+            classes.Add(commandClass);
             switch (cat)
             {
                 case Categories.Fun:
-                    Fun.Add(a);
+                    Fun.Add(commandClass);
                     break;
 
                 case Categories.Misc:
-                    Misc.Add(a);
+                    Misc.Add(commandClass);
                     break;
 
                 case Categories.Moderation:
-                    Moderation.Add(a);
+                    Moderation.Add(commandClass);
                     break;
 
+                case Categories.Debug:
+                    Debug.Add(commandClass);
+                    break;
                 default:
                     break;
             }
         }
 
-        public static Task PrepCat()
+        internal static Task PrepCat()
         {
             Category.Add(Categories.Fun, Fun);
             Category.Add(Categories.Misc, Misc);
             Category.Add(Categories.Moderation, Moderation);
+            Category.Add(Categories.Debug, Debug);
             return Task.CompletedTask;
         }
 
-        public static List<Type> Fun = new();
-        public static List<Type> Misc = new();
-        public static List<Type> Moderation = new();
-
-        public static List<Type> classes = new();
-        public static Dictionary<Categories, List<Type>> Category = new Dictionary<Categories, List<Type>>();
+        internal static List<Type> Fun = new();
+        internal static List<Type> Misc = new();
+        internal static List<Type> Moderation = new();
+        internal static List<Type> Debug = new();
+        
+        internal static List<Type> classes = new();
+        internal static Dictionary<Categories, List<Type>> Category = new Dictionary<Categories, List<Type>>();
     }
 }

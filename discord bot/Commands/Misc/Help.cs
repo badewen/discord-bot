@@ -33,16 +33,22 @@ namespace Bot.Commands.Misc
 
         public static Task prepareHelpCommand()
         {   //going to rarely touch this spaghethet code
-            var category = new EmbedBuilder();
-            category
-                .AddField("Fun", "Fun command")
-                .AddField("Misc", "Misc command or command with no category")
-                .AddField("Moderation", "Moderation command")
-                .Color = Color.Red;
-            listofcommands.Add("default", category.Build());
+            {
+                var commandCategory = new EmbedBuilder();
+                commandCategory
+                    .AddField("Fun", "Fun command")
+                    .AddField("Misc", "Misc command or command with no category")
+                    .AddField("Moderation", "Moderation command")
+                    .AddField("Debug", "Debug")
+                    .Color = Color.Red;
+                listofcommands.Add("default", commandCategory.Build());// defualt peag cnotains categoirs
+            }
             foreach (var command in CommandData.classes)
             {
-                var aliases = (AliasAttribute)Attribute.GetCustomAttribute(command.GetMethod(command.Name + "Async"), typeof(AliasAttribute));
+                // get all the alias
+                Console.WriteLine(command.Name);
+                var aliases = (AliasAttribute)Attribute.GetCustomAttribute(command.GetMethod(command.Name + "Async"), typeof(AliasAttribute)); 
+                // representable list of aliases
                 string stringaliases = "";
                 var commandEmbed = new EmbedBuilder();
                 commandEmbed.AddField("Command", command.Name)
@@ -51,6 +57,7 @@ namespace Bot.Commands.Misc
                 if (aliases == null) { }
                 else
                 {
+                    // appending or adding aliases to stringaliases
                     foreach (var alias in aliases.Aliases)
                     {
                         stringaliases += " , ";
@@ -61,24 +68,27 @@ namespace Bot.Commands.Misc
                 commandEmbed.Color = Color.Red;
                 listofcommands.Add(command.Name.ToLower(), commandEmbed.Build());
             }
+            // summary : .help <Category>
+            // get and loop through all categories
             foreach (var enumCategory in Enum.GetValues(typeof(Categories)))
             {
                 // get category from commanddata (ran out of names)
-                var categor = CommandData.Category[(Categories)enumCategory];
+                // return list of command class type
+                var commands = CommandData.Category[(Categories)enumCategory];
                 int conter = 0;
                 string commandCategoryString = "";
-                // get and append command associated with categor 
-                foreach (var commnd in categor)
+                // get and append command associated with the category
+                foreach (var command in commands)
                 {
-                    if (conter == 1)
+                    conter++;
+                    if (conter%2==0)
                     {
                         commandCategoryString += " , ";
-                        conter--;
+                        conter = 0;
                     }
-                    else conter++;
-                    commandCategoryString += commnd.Name;
+                    commandCategoryString += command.Name;
                 }
-                // if there is nothing associated with the category
+                // if there are no commands associated with the category
                 if (commandCategoryString == null || commandCategoryString == "") commandCategoryString = "None";
                 var embed = new EmbedBuilder().AddField(enumCategory.ToString(), commandCategoryString);
                 embed.Color = Color.Red;

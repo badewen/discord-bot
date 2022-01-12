@@ -21,13 +21,15 @@ namespace Bot.Commands.Moderation
                 await ReplyAsync("Invalid usage", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
                 return;
             }
-            List<ulong> membersId = new();
-            List<SocketUser> mentionedUsers = new();
-            _ = Task.Run(() =>
+            var s = Task.Run(() =>
             {
+                string asd = arg;
+                List<ulong> membersId = new();
+                List<SocketUser> mentionedUsers = new();
                 // loop through members id in the arg
-                foreach (var id in arg.Split(' '))
+                foreach (var id in asd.Split(' '))
                 {
+                    if (id.StartsWith("<@")) continue;
                     try { membersId.Add(Convert.ToUInt64(id)); }
                     catch { continue; }
                 }
@@ -37,6 +39,7 @@ namespace Bot.Commands.Moderation
                     foreach (var mentioned in Context.Message.MentionedUsers)
                     {
                         mentionedUsers.Add(mentioned);
+                        Console.WriteLine(mentioned);
                     }
                 }
                 catch { }
@@ -46,6 +49,12 @@ namespace Bot.Commands.Moderation
                     {
                         var target = Context.Guild.GetUser(id);
                         var author = Context.Guild.GetUser(Context.User.Id);
+                        if (target == null)
+                        {
+                            Console.WriteLine(id);
+                            ReplyAsync("that people doesnt exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
+                            return;
+                        }
                         if (target.Hierarchy > author.Hierarchy)
                         {
                             ReplyAsync("Cant ban people above you", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
@@ -59,8 +68,14 @@ namespace Bot.Commands.Moderation
                     }
                     foreach (var mentioned in mentionedUsers)
                     {
-                        var target = mentioned as SocketGuildUser;
-                        var author = Context.User as SocketGuildUser;
+                        var target = Context.Guild.GetUser(mentioned.Id);
+                        var author = Context.Guild.GetUser(Context.User.Id);
+                        Console.WriteLine(mentioned.Id);
+                        if (target == null)
+                        {
+                            ReplyAsync("that people doesnt exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
+                            return;
+                        }
                         if (target.Hierarchy > author.Hierarchy)
                         {
                             ReplyAsync("Cant ban people above you", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
@@ -75,6 +90,7 @@ namespace Bot.Commands.Moderation
                 }
                 catch { ReplyAsync("Something went wrong", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id)); return; }
             });
+            s.Wait(10);
             return;
         }
 

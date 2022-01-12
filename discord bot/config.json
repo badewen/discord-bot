@@ -1,4 +1,5 @@
 {
   "prefix": ".",
-  "token": "Token"
+  "token": "Token",
+  "debugAllowedUser": ["Allowed user id to use debug commands"]
 }

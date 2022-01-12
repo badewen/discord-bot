@@ -19,7 +19,7 @@ namespace Bot
         public static readonly JObject ClientConfig = JObject.Parse(File.ReadAllText(@"./config.json"));
 
         private static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
-
+        
         public async Task MainAsync()
         {
             discordConfig.GatewayIntents = (GatewayIntents)32447;
