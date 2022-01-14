@@ -5,3 +5,5 @@
 - replace "allowed user id to use debug command" with ids or leave it alone
 
 dicord net lab
+
+make util class later. my hand tired
