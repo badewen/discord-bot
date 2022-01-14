@@ -12,19 +12,19 @@ namespace Bot
             switch (cat)
             {
                 case Categories.Fun:
-                    Fun.Add(commandClass);
+                    s_funCommands.Add(commandClass);
                     break;
 
                 case Categories.Misc:
-                    Misc.Add(commandClass);
+                    s_miscCommands.Add(commandClass);
                     break;
 
                 case Categories.Moderation:
-                    Moderation.Add(commandClass);
+                    s_moderationCommands.Add(commandClass);
                     break;
 
                 case Categories.Debug:
-                    Debug.Add(commandClass);
+                    s_debugCommands.Add(commandClass);
                     break;
                 default:
                     break;
@@ -33,19 +33,21 @@ namespace Bot
 
         internal static Task PrepCat()
         {
-            Category.Add(Categories.Fun, Fun);
-            Category.Add(Categories.Misc, Misc);
-            Category.Add(Categories.Moderation, Moderation);
-            Category.Add(Categories.Debug, Debug);
+            Category.Add(Categories.Fun, s_funCommands);
+            Category.Add(Categories.Misc, s_miscCommands);
+            Category.Add(Categories.Moderation, s_moderationCommands);
+            Category.Add(Categories.Debug, s_debugCommands);
             return Task.CompletedTask;
         }
 
-        internal static List<Type> Fun = new();
-        internal static List<Type> Misc = new();
-        internal static List<Type> Moderation = new();
-        internal static List<Type> Debug = new();
+        private static List<Type> s_funCommands = new();
+        private static List<Type> s_miscCommands = new();
+        private static List<Type> s_moderationCommands = new();
+        private static List<Type> s_debugCommands = new();
         
         internal static List<Type> classes = new();
+        // this need a new name
+        // s_commandsCategory?
         internal static Dictionary<Categories, List<Type>> Category = new Dictionary<Categories, List<Type>>();
     }
 }
