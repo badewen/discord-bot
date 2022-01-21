@@ -12,19 +12,19 @@ namespace Bot
             switch (cat)
             {
                 case Categories.Fun:
-                    s_funCommands.Add(commandClass);
+                    funCommands.Add(commandClass);
                     break;
 
                 case Categories.Misc:
-                    s_miscCommands.Add(commandClass);
+                    miscCommands.Add(commandClass);
                     break;
 
                 case Categories.Moderation:
-                    s_moderationCommands.Add(commandClass);
+                    moderationCommands.Add(commandClass);
                     break;
 
                 case Categories.Debug:
-                    s_debugCommands.Add(commandClass);
+                    debugCommands.Add(commandClass);
                     break;
                 default:
                     break;
@@ -40,14 +40,14 @@ namespace Bot
             return Task.CompletedTask;
         }
 
-        private static List<Type> s_funCommands = new();
-        private static List<Type> s_miscCommands = new();
-        private static List<Type> s_moderationCommands = new();
-        private static List<Type> s_debugCommands = new();
+        private static List<Type> funCommands = new();
+        private static List<Type> miscCommands = new();
+        private static List<Type> moderationCommands = new();
+        private static List<Type> debugCommands = new();
         
         internal static List<Type> classes = new();
         // this need a new name
-        // s_commandsCategory?
-        internal static Dictionary<Categories, List<Type>> Category = new Dictionary<Categories, List<Type>>();
+        // commandsCategory?
+        internal static Dictionary<Categories, List<Type>> categoryComands = new Dictionary<Categories, List<Type>>();
     }
 }
