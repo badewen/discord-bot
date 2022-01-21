@@ -43,7 +43,7 @@ namespace Bot.Commands.Misc
                     .Color = Color.Red;
                 listofcommands.Add("default", commandCategory.Build());// defualt peag cnotains categoirs
             }
-            foreach (var command in CommandData.classes)
+            foreach (var command in CommandData.CommandClasses)
             {
                 // get all the alias
                 Console.WriteLine(command.Name);
@@ -72,9 +72,9 @@ namespace Bot.Commands.Misc
             // get and loop through all categories
             foreach (var enumCategory in Enum.GetValues(typeof(Categories)))
             {
-                // get category from commanddata (ran out of names)
+                // get commands associated with the category from commanddata (ran out of names)
                 // return list of command class type
-                var commands = CommandData.Category[(Categories)enumCategory];
+                var commands = CommandData.CategoryCommands[(Categories)enumCategory];
                 int conter = 0;
                 string commandCategoryString = "";
                 // get and append command associated with the category

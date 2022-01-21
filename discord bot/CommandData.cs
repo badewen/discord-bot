@@ -6,46 +6,46 @@ namespace Bot
 {
     public class CommandData
     {
-        public static void register(Type commandClass, Categories cat)
+        public static void register(Type commandClass, Categories category)
         {
-            classes.Add(commandClass);
-            switch (cat)
+            CommandClasses.Add(commandClass);
+            switch (category)
             {
                 case Categories.Fun:
-                    funCommands.Add(commandClass);
+                    FunCommands.Add(commandClass);
                     break;
 
                 case Categories.Misc:
-                    miscCommands.Add(commandClass);
+                    MiscCommands.Add(commandClass);
                     break;
 
                 case Categories.Moderation:
-                    moderationCommands.Add(commandClass);
+                    ModerationCommands.Add(commandClass);
                     break;
 
                 case Categories.Debug:
-                    debugCommands.Add(commandClass);
+                    DebugCommands.Add(commandClass);
                     break;
                 default:
                     break;
             }
         }
 
-        internal static Task PrepCat()
+        internal static Task PrepareCategories()
         {
-            Category.Add(Categories.Fun, s_funCommands);
-            Category.Add(Categories.Misc, s_miscCommands);
-            Category.Add(Categories.Moderation, s_moderationCommands);
-            Category.Add(Categories.Debug, s_debugCommands);
+            CategoryCommands.Add(Categories.Fun, FunCommands);
+            CategoryCommands.Add(Categories.Misc, MiscCommands);
+            CategoryCommands.Add(Categories.Moderation, ModerationCommands);
+            CategoryCommands.Add(Categories.Debug, DebugCommands);
             return Task.CompletedTask;
         }
 
-        private static List<Type> funCommands = new();
-        private static List<Type> miscCommands = new();
-        private static List<Type> moderationCommands = new();
-        private static List<Type> debugCommands = new();
+        private static List<Type> FunCommands = new();
+        private static List<Type> MiscCommands = new();
+        private static List<Type> ModerationCommands = new();
+        private static List<Type> DebugCommands = new();
         
-        internal static List<Type> classes = new();
-        internal static Dictionary<Categories, List<Type>> categoryComands = new Dictionary<Categories, List<Type>>();
+        internal static List<Type> CommandClasses = new();
+        internal static Dictionary<Categories, List<Type>> CategoryCommands = new Dictionary<Categories, List<Type>>();
     }
 }

@@ -36,7 +36,7 @@ namespace Bot
             CommandServiceConfig.CaseSensitiveCommands = false;
             commandHandler = new CommandHandler(client, commandService);
             await commandHandler.SetupCommandsAsync(); // class command cons called
-            await CommandData.PrepCat();
+            await CommandData.PrepareCategories();
             await Help.prepareHelpCommand();
             Console.WriteLine($"{client.CurrentUser} is ready");
             await client.SetGameAsync(".help");
