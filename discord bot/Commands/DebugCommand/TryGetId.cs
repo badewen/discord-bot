@@ -29,7 +29,7 @@ namespace Bot.Commands.Debug
             var result = Context.Guild.GetUser(id);
 
             if (result == null)
-            {//741846750867750972
+            {
                 ReplyAsync("failed to get user", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
                 return Task.CompletedTask;
             }
@@ -39,7 +39,7 @@ namespace Bot.Commands.Debug
 
         public TryGetId()
         {
-            CommandData.register(typeof(TryGetId), Categories.Debug);
+            CommandList.register(new CommandData(".trygetid <user>", "get user id", "TryGetIdAsync", typeof(TryGetId), Categories.Debug));
         }
     }
 }

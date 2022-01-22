@@ -22,7 +22,7 @@ namespace Bot.Commands.Moderation
 
         public Timeout()
         {
-            CommandData.register(typeof(Timeout), Categories.Moderation);
+            CommandList.register(new CommandData(".timeout <user>", "timeout user", "TimeoutAsync", typeof(Timeout) ,Categories.Moderation));
         }
     }
     

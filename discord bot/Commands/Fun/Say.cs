@@ -7,11 +7,6 @@ namespace Bot.Commands.Fun
 {
     public class Say : ModuleBase<SocketCommandContext>
     {
-        public Say()
-        {
-            CommandData.register(typeof(Say), Categories.Fun);
-        }
-
         [RequireBotPermission(Discord.ChannelPermission.SendMessages)]
         [Command("say")]
         [Usage(".Say <message>")]
@@ -32,6 +27,10 @@ namespace Bot.Commands.Fun
             if (Context.Message.MentionedEveryone) arg = arg.Replace("@everyone", "@‎everyone");
             ReplyAsync(arg.ToString());
             return Task.CompletedTask;
+        }
+        public Say()
+        {
+            CommandList.register(new CommandData(".say <message>", "make bot say what you want", "SayAsync", typeof(Say), Categories.Fun));
         }
     }
 }

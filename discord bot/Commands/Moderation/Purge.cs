@@ -10,11 +10,9 @@ namespace Bot.Commands.Moderation
 {
     public class Purge : ModuleBase<SocketCommandContext>
     {
+        [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
         [RequireBotPermission(Discord.ChannelPermission.ManageMessages)]
         [Command("purge")]
-        [Usage(".purge <amount>")]
-        [Summary("Delete message under 14 days because discord limitation")]
-        [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
         public async Task PurgeAsync(string message)
         {
             int amount;
@@ -48,7 +46,7 @@ namespace Bot.Commands.Moderation
 
         public Purge()
         {
-            CommandData.register(typeof(Purge), Categories.Moderation);
+            CommandList.register(new CommandData(".purge <amount>", "delete message \n note: this only delete message that is less than 14 days old", "PurgeAsync", typeof(Purge), Categories.Moderation));
         }
     }
 }

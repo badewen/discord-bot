@@ -12,8 +12,6 @@ namespace Bot.Commands.Misc
         public static Dictionary<string, Embed> listofcommands = new();
 
         [Command("help")]
-        [Usage(".help")]
-        [Summary("display this message")]
         public Task HelpAsync(string arg = "default")
         {
             // very proud of this code very "clean"
@@ -43,19 +41,18 @@ namespace Bot.Commands.Misc
                     .Color = Color.Red;
                 listofcommands.Add("default", commandCategory.Build());// defualt peag cnotains categoirs
             }
-            foreach (var command in CommandData.CommandClasses)
+            foreach (var command in CommandList.Commands)
             {
                 // get all the alias
-                Console.WriteLine(command.Name);
-                var aliases = (AliasAttribute)Attribute.GetCustomAttribute(command.GetMethod(command.Name + "Async"), typeof(AliasAttribute)); 
+                Console.WriteLine(command.CommandClass.Name);
+                var aliases = (AliasAttribute)Attribute.GetCustomAttribute(command.CommandClass.GetMethod(command.CommandMethodName), typeof(AliasAttribute)); 
                 // representable list of aliases
                 string stringaliases = "";
                 var commandEmbed = new EmbedBuilder();
-                commandEmbed.AddField("Command", command.Name)
-                             .AddField("Description", ((SummaryAttribute)Attribute.GetCustomAttribute(command.GetMethod(command.Name + "Async"), typeof(SummaryAttribute))).Text)
-                             .AddField("Usage", ((UsageAttribute)Attribute.GetCustomAttribute(command.GetMethod(command.Name + "Async"), typeof(UsageAttribute))).Text ?? "not provided");
-                if (aliases == null) { }
-                else
+                commandEmbed.AddField("Command", command.CommandClass.Name)
+                             .AddField("Description", command.Description)
+                             .AddField("Usage", command.Usage);
+                if (aliases != null)
                 {
                     // appending or adding aliases to stringaliases
                     foreach (var alias in aliases.Aliases)
@@ -64,9 +61,9 @@ namespace Bot.Commands.Misc
                         stringaliases += alias;
                     }
                 }
-                commandEmbed.AddField("Aliases", command.Name + stringaliases);
+                commandEmbed.AddField("Aliases", command.CommandClass.Name + stringaliases);
                 commandEmbed.Color = Color.Red;
-                listofcommands.Add(command.Name.ToLower(), commandEmbed.Build());
+                listofcommands.Add(command.CommandClass.Name.ToLower(), commandEmbed.Build());
             }
             // summary : .help <Category>
             // get and loop through all categories
@@ -74,7 +71,7 @@ namespace Bot.Commands.Misc
             {
                 // get commands associated with the category from commanddata (ran out of names)
                 // return list of command class type
-                var commands = CommandData.CategoryCommands[(Categories)enumCategory];
+                var commands = CommandList.CategoryCommands[(Categories)enumCategory];
                 int conter = 0;
                 string commandCategoryString = "";
                 // get and append command associated with the category
@@ -86,7 +83,7 @@ namespace Bot.Commands.Misc
                         commandCategoryString += " , ";
                         conter = 0;
                     }
-                    commandCategoryString += command.Name;
+                    commandCategoryString += command.CommandClass.Name;
                 }
                 // if there are no commands associated with the category
                 if (commandCategoryString == null || commandCategoryString == "") commandCategoryString = "None";
@@ -101,7 +98,7 @@ namespace Bot.Commands.Misc
 
         public Help()
         {
-            CommandData.register(typeof(Help), Categories.Misc);
+            CommandList.register(new CommandData(".help <category / commands>", "display this message", "HelpAsync", typeof(Help), Categories.Misc));
         }
     }
 }
