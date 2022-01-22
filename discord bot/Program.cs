@@ -4,6 +4,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -40,6 +41,13 @@ namespace Bot
             await Help.prepareHelpCommand();
             Console.WriteLine($"{client.CurrentUser} is ready");
             await client.SetGameAsync(".help");
+
+            List<Task> downloadTasks = new();
+            foreach(var guild in client.Guilds)
+            {
+                downloadTasks.Add(Task.Run(() => { guild.DownloadUsersAsync(); }));
+            }
+            await Task.WhenAll(downloadTasks);
         }
 
         private Task Log(LogMessage message)

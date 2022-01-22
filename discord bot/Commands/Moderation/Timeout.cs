@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Commands;
-using Bot.Attributes;
 
 namespace Bot.Commands.Moderation 
 {
@@ -12,9 +11,7 @@ namespace Bot.Commands.Moderation
     {
         // in progress
         [Command("timeout")]
-        [Usage(".timeout <user>")]
         [Alias("mute")]
-        [Summary("timeout user from sending message (mute)")]
         public Task TimeoutAsync()
         {
             return Task.CompletedTask;

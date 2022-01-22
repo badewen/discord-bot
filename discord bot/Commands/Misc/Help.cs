@@ -1,5 +1,4 @@
-﻿using Bot.Attributes;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using System;
 using System.Collections.Generic;

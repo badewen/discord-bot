@@ -1,5 +1,4 @@
-﻿using Bot.Attributes;
-using Discord.Commands;
+﻿using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
@@ -9,8 +8,6 @@ namespace Bot.Commands.Fun
     {
         [RequireBotPermission(Discord.ChannelPermission.SendMessages)]
         [Command("say")]
-        [Usage(".Say <message>")]
-        [Summary("make bot say what you want it to say")]
         public Task SayAsync([Remainder] string message)
         {
             var arg = message;

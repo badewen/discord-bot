@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Commands;
-using Bot.Attributes;
 
 namespace Bot.Commands.Debug
 {
@@ -12,22 +11,21 @@ namespace Bot.Commands.Debug
     {
         [Command("trygetid")]
         [Alias("getid")]
-        [Summary("debug")]
-        [Usage(".trygetid <id>")]
-        public Task TryGetIdAsync(ulong id)
+        public Task TryGetIdAsync(string id)
         {
+            Context.Guild.DownloadUsersAsync();
             var allowed = Program.ClientConfig["debugAllowedUser"].ToObject<string[]>();
 
-            foreach(var a in allowed)
+            foreach(var i in allowed)
             {
-                if (Context.User.Id.ToString() != a)
+                if (Context.User.Id.ToString() != i)
                 {
                     return Task.CompletedTask;
                 }
             }
+            var e = Convert.ToUInt64(id);
 
-            var result = Context.Guild.GetUser(id);
-
+            var result = Context.Guild.GetUser(e);
             if (result == null)
             {
                 ReplyAsync("failed to get user", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
