@@ -58,8 +58,7 @@ namespace Bot.Commands.Moderation
                         if (target == null) { notExists++; continue; }
                         if (target.Hierarchy >= author.Hierarchy) { aboveAuthor++; continue; }
                         if (target.Hierarchy >= bot.Hierarchy) { aboveBot++; continue; }
-
-                        Console.WriteLine($"*bam *bonk {target.Username}#{target.Discriminator}");
+                        Context.Guild.AddBanAsync(target);
                     }
                     ReplyAsync($"done banning member \n {aboveAuthor} cant ban user because above you\n {aboveBot} cant ban user because above me\n {notExists} users doesn't exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
                 }
