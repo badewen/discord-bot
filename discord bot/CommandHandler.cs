@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+// i have no idea how this class work 
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Reflection;
