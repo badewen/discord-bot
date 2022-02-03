@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Commands;
+using Discord.WebSocket;
 
 namespace Bot.Commands.Moderation 
 {
@@ -14,6 +15,8 @@ namespace Bot.Commands.Moderation
         [Alias("mute")]
         public Task TimeoutAsync()
         {
+            var downloadTask = Task.Run(() => { Context.Guild.DownloadUsersAsync(); });
+            
             return Task.CompletedTask;
         }
 
