@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
 
 namespace Bot
 {
@@ -31,6 +32,15 @@ namespace Bot
                 if (!found) return true;
             }
             return false;
+        }
+        
+        public static bool isHigher(IGuild guild, IUser author, ulong target)
+        {
+            var authorHierarchy = guild.GetUserAsync(author.Id).Result.Hierarchy;
+            var targetHierarchy = guild.GetUserAsync(target).Result.Hierarchy;
+
+            return authorHierarchy > targetHierarchy;
+
         }
     }
 }
