@@ -4,5 +4,5 @@
 - place the Config.json in the same dir as the .exe file (after build)
 - Take a look at config.json
 
-dicord net 
+dicord net labs
 
