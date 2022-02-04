@@ -8,11 +8,11 @@ namespace Bot.Commands.Fun
     {
         [RequireBotPermission(Discord.ChannelPermission.SendMessages)]
         [Command("say")]
-        public Task SayAsync([Remainder] string message)
+        public async Task SayAsync([Remainder] string message)
         {
             var arg = message;
             arg = arg.Trim();
-            if (arg.Length == 0) return Task.CompletedTask;
+            if (arg.Length == 0) return;
             foreach (var mentionedMember in Context.Message.MentionedUsers)
             {
                 arg = arg.Replace($"<@{mentionedMember.Id}>", $"@{mentionedMember.Username}");
@@ -22,8 +22,8 @@ namespace Bot.Commands.Fun
                 arg = arg.Replace($"<@&{mentionedRole.Id}>", $"@{mentionedRole.Name}");
             }
             if (Context.Message.MentionedEveryone) arg = arg.Replace("@everyone", "@‎everyone");
-            ReplyAsync(arg.ToString());
-            return Task.CompletedTask;
+            await ReplyAsync(arg.ToString());
+            return ;
         }
         public Say()
         {

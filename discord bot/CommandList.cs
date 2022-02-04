@@ -46,6 +46,7 @@ namespace Bot
         private static List<CommandData> DebugCommands = new();
         
         internal static List<CommandData> Commands = new();
+        internal static Dictionary<string, CommandData> CommandsDic = new();
         internal static Dictionary<Categories, List<CommandData>> CategoryCommands = new Dictionary<Categories, List<CommandData>>();
     }
 }

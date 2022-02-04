@@ -11,21 +11,21 @@ namespace Bot.Commands.Misc
         public static Dictionary<string, Embed> listofcommands = new();
 
         [Command("help")]
-        public Task HelpAsync(string arg = "default")
+        public async Task HelpAsync(string arg = "default")
         {
             // very proud of this code very "clean"
             arg = arg.ToLower();
             try
             {
                 var command = listofcommands[arg];
-                ReplyAsync(embed: command);
+                await ReplyAsync(embed: command);
             }
             catch
             {
-                ReplyAsync(message: "Cant find that command", messageReference: new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
+                await ReplyAsync(message: "Cant find that command", messageReference: new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
             }
 
-            return Task.CompletedTask;
+            return ;
         }
 
         public static Task prepareHelpCommand()
@@ -63,6 +63,7 @@ namespace Bot.Commands.Misc
                 commandEmbed.AddField("Aliases", command.CommandClass.Name + stringaliases);
                 commandEmbed.Color = Color.Red;
                 listofcommands.Add(command.CommandClass.Name.ToLower(), commandEmbed.Build());
+                CommandList.CommandsDic.Add(command.CommandClass.Name.ToLower(), command);
             }
             // summary : .help <Category>
             // get and loop through all categories

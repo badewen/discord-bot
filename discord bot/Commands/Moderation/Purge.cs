@@ -15,31 +15,26 @@ namespace Bot.Commands.Moderation
         public async Task PurgeAsync(string message)
         {
             int amount;
-            try
-            {
-                amount = Convert.ToInt32(message);
-            }
-            catch
+            if (Utils.Isnan(message))
             {
                 await ReplyAsync("enter ONLY number please.", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
                 return;
             }
+            amount = Convert.ToInt32(message);
 
             List<Discord.IMessage> messages = new();
 
-            _ = Task.Run(() => // used "_" to make ugly green linting gone
-              {
-                  var idk = Context.Channel.GetMessagesAsync(fromMessage: Context.Message, Discord.Direction.Before, limit: amount).ToListAsync().Result;
-                  foreach (var c in idk)
-                  {
-                      foreach (var f in c)
-                      {
-                          messages.Add(f);
-                      }
-                  }
-                  (Context.Channel as SocketTextChannel).DeleteMessagesAsync(messages);
-                  ReplyAsync($"messages has been removed", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Message.Channel.Id, Context.Guild.Id));
-              });
+            var idk = Context.Channel.GetMessagesAsync(fromMessage: Context.Message, Discord.Direction.Before, limit: amount).ToListAsync().Result;
+            foreach (var c in idk)
+            {
+                foreach (var f in c)
+                {
+                    messages.Add(f);
+                }
+            }
+            await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(messages);
+            await ReplyAsync($"messages has been removed", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Message.Channel.Id, Context.Guild.Id));
+            
             return;
         }
 

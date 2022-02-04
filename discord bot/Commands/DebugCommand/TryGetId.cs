@@ -11,28 +11,19 @@ namespace Bot.Commands.Debug
     {
         [Command("trygetid")]
         [Alias("getid")]
-        public Task TryGetIdAsync(string id)
+        public async Task TryGetIdAsync(string id)
         {
-            Context.Guild.DownloadUsersAsync();
-            var allowed = Program.ClientConfig["debugAllowedUser"].ToObject<string[]>();
-
-            foreach(var i in allowed)
-            {
-                if (Context.User.Id.ToString() != i)
-                {
-                    return Task.CompletedTask;
-                }
-            }
+            await Context.Guild.DownloadUsersAsync();
             var e = Convert.ToUInt64(id);
 
             var result = Context.Guild.GetUser(e);
             if (result == null)
             {
-                ReplyAsync("failed to get user", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
-                return Task.CompletedTask;
+                await ReplyAsync("failed to get user", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
+                return;
             }
-            ReplyAsync("success", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
-            return Task.CompletedTask;
+            await ReplyAsync("success", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
+            return ;
         }
 
         public TryGetId()
