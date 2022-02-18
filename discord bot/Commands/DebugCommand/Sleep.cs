@@ -8,12 +8,12 @@ using Discord.Commands;
 namespace Bot.Commands.DebugCommand
 {
     public class Sleep : ModuleBase<SocketCommandContext>
-    {
+    {//3126
         [Command("sleep")]
-        public async Task SleepAsync(int duration)
+        public Task SleepAsync(int duration)
         {
-            await Task.Delay(duration);
-            return;
+            _= Task.Run(() => { Task.Delay(duration); });
+            return Task.CompletedTask;
         }
 
         Sleep()

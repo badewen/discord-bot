@@ -7,7 +7,7 @@ using Discord;
 
 namespace Bot
 {
-    public class Utils
+    public sealed class Utils
     {
         public static List<char> Nums = new(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
         // true if nan 
@@ -41,6 +41,29 @@ namespace Bot
 
             return authorHierarchy > targetHierarchy;
 
+        }
+
+        public static string ToString<T>(IList<T> list)
+        {
+            string a = "";
+            foreach(var item in list)
+            {
+                a += item;
+                a += " ";
+            }
+            a.Remove(a.Length-1);
+            return a;
+        }
+        public static List<string> Split (string str , char delim)
+        {
+            List<string> token = new();
+            Int32 pos;
+            while((pos = str.IndexOf(delim)) != -1)
+            {
+                token.Add(str.Substring(0,pos));
+                str.Remove(0, pos + 1);
+            }
+            return token;
         }
     }
 }

@@ -58,12 +58,14 @@ namespace Bot.Commands.Misc
                     {
                         stringaliases += " , ";
                         stringaliases += alias;
+                        CommandList.CommandsDic.Add(alias.ToLower(), command);
                     }
                 }
                 commandEmbed.AddField("Aliases", command.CommandClass.Name + stringaliases);
                 commandEmbed.Color = Color.Red;
                 listofcommands.Add(command.CommandClass.Name.ToLower(), commandEmbed.Build());
                 CommandList.CommandsDic.Add(command.CommandClass.Name.ToLower(), command);
+
             }
             // summary : .help <Category>
             // get and loop through all categories

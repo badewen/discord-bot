@@ -34,12 +34,12 @@ namespace Bot.Commands.Moderation
             {
                 if (!Utils.Isnan(id) && id.Length == 18) //mentioned user always nan because the raw string is '<@id>'
                 {
-                    Console.WriteLine(id);
+ //                   Console.WriteLine(id);
                     filteredIds.Add(Convert.ToUInt64(id));
                 }
                 else
                 {
-                    Console.WriteLine($"not Valid : {id}");
+ //                   Console.WriteLine($"not Valid : {id}");
                 }
             }
             // no need explanation
@@ -49,7 +49,7 @@ namespace Bot.Commands.Moderation
             foreach (var id in filteredIds)
             {
                 var target = Context.Guild.GetUser(id);
-                Console.WriteLine($"{Context.Guild.Name}, {Context.Guild.Id}");
+//                Console.WriteLine($"{Context.Guild.Name}, {Context.Guild.Id}");
                 if (target == null) { notExists++; continue; }
                 if (target.Hierarchy >= author.Hierarchy) { aboveAuthor++; continue; }
                 if (target.Hierarchy >= bot.Hierarchy) { aboveBot++; continue; }
