@@ -31,7 +31,6 @@ namespace Bot.Commands.Moderation
             int Days = 0;
             foreach (var arg in args) 
                 {
-                    Console.WriteLine("AAAAAAA");
                     if (!Utils.Isnan(arg) && arg.Length == 18)
                     {
                         ids.Add(Convert.ToUInt64(arg));
@@ -66,9 +65,9 @@ namespace Bot.Commands.Moderation
                 }
             Duration = new(Days, Hours, Minutes, Seconds);
             foreach (var mentioned in Context.Message.MentionedUsers)
-                {
-                    ids.Add(mentioned.Id);
-                }
+            {
+                ids.Add(mentioned.Id);
+            }
             int aboveAuthor = 0;
             int aboveBot = 0;
             int doesntExist = 0;

@@ -5,4 +5,5 @@
 - Take a look at config.json
 
 dicord net labs
-
+for flex 
+[![CodeFactor](https://www.codefactor.io/repository/github/badewen/discord-bot/badge/master)](https://www.codefactor.io/repository/github/badewen/discord-bot/overview/master)
