@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Discord;
+using System.Linq;
+using System.Reflection;
 
 namespace Bot
 {
@@ -64,6 +63,11 @@ namespace Bot
                 str.Remove(0, pos + 1);
             }
             return token;
+        }
+        //return message if attribute is not found
+        public static bool IsNull<T>(T a)
+        {
+            return a == null;
         }
     }
 }

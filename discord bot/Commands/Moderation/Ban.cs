@@ -1,17 +1,22 @@
 ﻿using Discord.Commands;
-using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
-using Bot;
+using Bot.Attributes;
 using System.Threading.Tasks;
 
 namespace Bot.Commands.Moderation
 {
     public class Ban : ModuleBase<SocketCommandContext>
     {
+        private const string Usage = ".ban <id / mention>";
+        private const string description = "ban people";
+
         [RequireBotPermission(Discord.GuildPermission.BanMembers)]
         [RequireUserPermission(Discord.GuildPermission.BanMembers)]
         [Command("ban")]
+        [Usage(Usage)]
+        [Description(description)]
+        [Category(Category.Moderation)]
         public async Task BanAsync([Remainder] string arg)
         {
             if (arg.Length == 0)
@@ -34,12 +39,7 @@ namespace Bot.Commands.Moderation
             {
                 if (!Utils.Isnan(id) && id.Length == 18) //mentioned user always nan because the raw string is '<@id>'
                 {
- //                   Console.WriteLine(id);
                     filteredIds.Add(Convert.ToUInt64(id));
-                }
-                else
-                {
- //                   Console.WriteLine($"not Valid : {id}");
                 }
             }
             // no need explanation
@@ -49,7 +49,6 @@ namespace Bot.Commands.Moderation
             foreach (var id in filteredIds)
             {
                 var target = Context.Guild.GetUser(id);
-//                Console.WriteLine($"{Context.Guild.Name}, {Context.Guild.Id}");
                 if (target == null) { notExists++; continue; }
                 if (target.Hierarchy >= author.Hierarchy) { aboveAuthor++; continue; }
                 if (target.Hierarchy >= bot.Hierarchy) { aboveBot++; continue; }
@@ -59,16 +58,6 @@ namespace Bot.Commands.Moderation
             
             
             return;
-        }
-
-        public Ban()
-        {
-            CommandList.register(new CommandData(
-                ".ban <id / mention>", 
-                "ban people", 
-                "BanAsync", 
-                typeof(Ban), 
-                Categories.Moderation));            
         }
     }
 }

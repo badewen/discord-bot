@@ -1,6 +1,7 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using System;
+using Bot.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,9 +10,14 @@ namespace Bot.Commands.Moderation
 {
     public class Purge : ModuleBase<SocketCommandContext>
     {
+        private const string usage = ".purge <1-100>";
+        private const string description = "delete message \n note: this only delete message that is less than 14 days old";
         [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
         [RequireBotPermission(Discord.ChannelPermission.ManageMessages)]
         [Command("purge")]
+        [Usage(usage)]
+        [Description(description)]
+        [Category(Category.Moderation)]
         public async Task PurgeAsync(string message)
         {
             int amount;
@@ -36,11 +42,6 @@ namespace Bot.Commands.Moderation
             await ReplyAsync($"messages has been removed", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Message.Channel.Id, Context.Guild.Id));
             
             return;
-        }
-
-        public Purge()
-        {
-            CommandList.register(new CommandData(".purge <amount>", "delete message \n note: this only delete message that is less than 14 days old", "PurgeAsync", typeof(Purge), Categories.Moderation));
         }
     }
 }

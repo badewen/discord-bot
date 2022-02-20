@@ -5,28 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord.Commands;
 using Discord.Rest;
-using Bot;
+using Bot.Attributes;
 
 namespace Bot.Commands.Moderation 
 {
     public class Timeout : ModuleBase<SocketCommandContext>
     {
+        private const string usage = ".timeout <user>";
+        private const string description = "timeout user";
         // in progress
-        [Command("timeout")]
+        [Command("timeout", RunMode = RunMode.Async)]
         [Alias("mute")]
-        public Task TimeoutAsync([Remainder] string input)
+        [Usage(usage)]
+        [Description(description)]
+        [Category(Category.Moderation)]
+        public async Task TimeoutAsync([Remainder] string input)
         {
-            _ = Task.Run(() =>
-            {
-                var downloadTask = Context.Guild.DownloadUsersAsync();
-                string[] args = input.Split(' ');
-                List<ulong> ids = new();
-                TimeSpan Duration;
-                int Seconds = 10;
-                int Minutes = 0;
-                int Hours = 0;
-                int Days = 0;
-                foreach (var arg in args) 
+            await Context.Guild.DownloadUsersAsync();
+            string[] args = input.Split(' ');
+            List<ulong> ids = new();
+            TimeSpan Duration;
+            int Seconds = 10;
+            int Minutes = 0;
+            int Hours = 0;
+            int Days = 0;
+            foreach (var arg in args) 
                 {
                     Console.WriteLine("AAAAAAA");
                     if (!Utils.Isnan(arg) && arg.Length == 18)
@@ -61,31 +64,26 @@ namespace Bot.Commands.Moderation
                         }
                     }
                 }
-                Duration = new(Days, Hours, Minutes, Seconds);
-                foreach (var mentioned in Context.Message.MentionedUsers)
+            Duration = new(Days, Hours, Minutes, Seconds);
+            foreach (var mentioned in Context.Message.MentionedUsers)
                 {
                     ids.Add(mentioned.Id);
                 }
-                int aboveAuthor = 0;
-                int aboveBot = 0;
-                int doesntExist = 0;
-                foreach (var id in ids)
-                {
-                    Discord.WebSocket.SocketGuildUser target = Context.Guild.GetUser(id);
-                    if (target == null) { doesntExist++; continue; }
-                    if (!Utils.isHigher(Context.Guild, Context.User, id)) { aboveAuthor++; continue; }
-                    if (!Utils.isHigher(Context.Guild, Program.client.CurrentUser, id)) { aboveBot++; continue; }
-                    target.SetTimeOutAsync(Duration);
-                    Console.WriteLine($"{target.Username} timeouted for {Duration.Days}D , {Duration.Hours}H, {Duration.Minutes}M, {Duration.Seconds}S");
-                }
-                ReplyAsync($"done timeout-ing member \n cant timeout {aboveAuthor} user because above you\n cant timeout {aboveBot} user because above me\n {doesntExist} users doesn't exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
-            });
-            return Task.CompletedTask;
-        }
+            int aboveAuthor = 0;
+            int aboveBot = 0;
+            int doesntExist = 0;
+            foreach (var id in ids)
+            {
+                Discord.WebSocket.SocketGuildUser target = Context.Guild.GetUser(id);
+                if (target == null) { doesntExist++; continue; }
+                if (!Utils.isHigher(Context.Guild, Context.User, id)) { aboveAuthor++; continue; }
+                if (!Utils.isHigher(Context.Guild, Program.client.CurrentUser, id)) { aboveBot++; continue; }
+                await target.SetTimeOutAsync(Duration);
+                Console.WriteLine($"{target.Username} timeouted for {Duration.Days}D , {Duration.Hours}H, {Duration.Minutes}M, {Duration.Seconds}S");
+            }
+            await ReplyAsync($"done timeout-ing member \n cant timeout {aboveAuthor} user because above you\n cant timeout {aboveBot} user because above me\n {doesntExist} users doesn't exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
 
-        public Timeout()
-        {
-            CommandList.register(new CommandData(".timeout <user>", "timeout user", "TimeoutAsync", typeof(Timeout) ,Categories.Moderation));
+            return ;
         }
     }
 }

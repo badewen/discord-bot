@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Bot.Attributes;
 using System.Threading.Tasks;
 using Discord.Commands;
 
@@ -9,8 +7,13 @@ namespace Bot.Commands.Debug
 {
     public class TryGetId : ModuleBase<SocketCommandContext>
     {
+        private const string Usage = ".trygetid <user>";
+        private const string Description = "get user id";
         [Command("trygetid")]
         [Alias("getid")]
+        [Usage(Usage)]
+        [Description(Description)]
+        [Category(Category.Debug)]
         public async Task TryGetIdAsync(string id)
         {
             await Context.Guild.DownloadUsersAsync();
@@ -24,11 +27,6 @@ namespace Bot.Commands.Debug
             }
             await ReplyAsync("success", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
             return ;
-        }
-
-        public TryGetId()
-        {
-            CommandList.register(new CommandData(".trygetid <user>", "get user id", "TryGetIdAsync", typeof(TryGetId), Categories.Debug));
         }
     }
 }

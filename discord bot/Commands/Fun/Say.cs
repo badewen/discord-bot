@@ -1,13 +1,18 @@
 ﻿using Discord.Commands;
-using System;
+using Bot.Attributes;
 using System.Threading.Tasks;
 
 namespace Bot.Commands.Fun
 {
     public class Say : ModuleBase<SocketCommandContext>
     {
+        private const string Usage = ".say <message>";
+        private const string Description = "make bot what you want it to say";
         [RequireBotPermission(Discord.ChannelPermission.SendMessages)]
         [Command("say")]
+        [Usage(Usage)]
+        [Description(Description)]
+        [Category(Category.Fun)]
         public async Task SayAsync([Remainder] string message)
         {
             var arg = message;
@@ -24,10 +29,6 @@ namespace Bot.Commands.Fun
             if (Context.Message.MentionedEveryone) arg = arg.Replace("@everyone", "@‎everyone");
             await ReplyAsync(arg.ToString());
             return ;
-        }
-        public Say()
-        {
-            CommandList.register(new CommandData(".say <message>", "make bot say what you want", "SayAsync", typeof(Say), Categories.Fun));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Bot
 {
-    public enum Categories
+    public enum Category
     {
         Fun = 1,
         Misc = 2,

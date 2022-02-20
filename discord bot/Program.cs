@@ -1,6 +1,5 @@
 ﻿using Bot.Commands.Misc;
 using Discord;
-using System.Reflection;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json.Linq;
@@ -38,8 +37,9 @@ namespace Bot
             CommandServiceConfig.CaseSensitiveCommands = false;
             commandHandler = new CommandHandler(client, commandService);
             await commandHandler.SetupCommandsAsync(); // class command cons called
+            await CommandList.RegisterAllCommands();
             await CommandList.PrepareCategories();
-            await Help.prepareHelpCommand();
+            await CommandList.BuildCommandsEmbed();
             Console.WriteLine($"{client.CurrentUser} is ready");
             await client.SetGameAsync(".help");
 
