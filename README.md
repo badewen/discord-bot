@@ -4,6 +4,6 @@
 - place the Config.json in the same dir as the .exe file (after build)
 - Take a look at config.json
 
-dicord net labs
+dicord net labs <br/>
 for flex <br/>
 [![CodeFactor](https://www.codefactor.io/repository/github/badewen/discord-bot/badge/master)](https://www.codefactor.io/repository/github/badewen/discord-bot/overview/master)
