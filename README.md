@@ -8,4 +8,4 @@ dicord net labs <br/>
 for flex <br/>
 [![CodeFactor](https://www.codefactor.io/repository/github/badewen/discord-bot/badge/master)](https://www.codefactor.io/repository/github/badewen/discord-bot/overview/master) <br/>
 
-i've lost my motivation on this project soooo imma postpone this project for a while ~~obviously not because discord.py returned~~
+idk what i said previously, but I HAVE FOUND SOLUTION FOR VOICE BABYYYYYYYYYYY RESUMING DEVELOPMENT
