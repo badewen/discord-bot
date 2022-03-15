@@ -2,8 +2,10 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord.Rest;
 
 namespace Bot
 {
@@ -56,11 +58,11 @@ namespace Bot
                     return;
                 }
             }
-            await _commandsService.ExecuteAsync( //magic
+            var handle =  _commandsService.ExecuteAsync( //magic
                 context: context,
                 argPos: argpos,
-                services: null
-                );
+                services: null);
+            
         }
     }
 }

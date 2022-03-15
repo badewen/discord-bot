@@ -5,7 +5,7 @@ using Discord.Commands;
 namespace Bot.Commands.DebugCommand
 {
     public class Sleep : ModuleBase<SocketCommandContext>
-    {//3126
+    {
         private const string Usage = ".sleep <duration(ms)>";
         private const string Description = "sleep";
         [Command("sleep", RunMode = RunMode.Async)]

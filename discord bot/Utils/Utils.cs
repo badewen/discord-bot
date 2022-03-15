@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Discord;
-using System.Linq;
-using System.Reflection;
+using CliWrap;
 
 namespace Bot
 {
@@ -68,6 +69,19 @@ namespace Bot
         public static bool IsNull<T>(T a)
         {
             return a == null;
+        }
+
+        public static ProcessStartInfo PrepareFFmpeg(string url)
+        {
+            var ffmpeg = new ProcessStartInfo
+            {
+                FileName  = "ffmpeg",
+                Arguments = $"-hide_banner -loglevel panic -ss 0 -t 20 -i \"{url}\" -ac 2 -f s16le -ar 48000 pipe:1",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            return ffmpeg;
         }
     }
 }
