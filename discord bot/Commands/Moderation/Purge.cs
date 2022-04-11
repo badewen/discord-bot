@@ -1,7 +1,7 @@
-﻿using Discord.Commands;
+﻿using Bot.Attributes;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
-using Bot.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +12,7 @@ namespace Bot.Commands.Moderation
     {
         private const string usage = ".purge <1-100>";
         private const string description = "delete message \n note: this only delete message that is less than 14 days old";
+
         [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
         [RequireBotPermission(Discord.ChannelPermission.ManageMessages)]
         [Command("purge")]
@@ -40,7 +41,7 @@ namespace Bot.Commands.Moderation
             }
             await (Context.Channel as SocketTextChannel).DeleteMessagesAsync(messages);
             await ReplyAsync($"messages has been removed", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Message.Channel.Id, Context.Guild.Id));
-            
+
             return;
         }
     }

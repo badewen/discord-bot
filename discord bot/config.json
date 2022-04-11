@@ -1,5 +1,5 @@
 {
   "prefix": ".", // bot prefix
   "token": "<replace>", // your bot token
-  "debugAllowedUser": ["<replace>"] // array of users id . allow users with the id run debug commands
+  "debugAllowedUser": [ "<replace>" ] // array of users id . allow users with the id run debug commands
 }

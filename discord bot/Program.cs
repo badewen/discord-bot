@@ -1,5 +1,4 @@
-﻿using Bot.Commands.Misc;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json.Linq;
@@ -20,7 +19,7 @@ namespace Bot
         public static readonly JObject ClientConfig = JObject.Parse(File.ReadAllText(@"./config.json"));
 
         private static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
-        
+
         public async Task MainAsync()
         {
             discordConfig.GatewayIntents = (GatewayIntents)32447;
@@ -44,9 +43,9 @@ namespace Bot
             await client.SetGameAsync(".help");
 
             List<Task> downloadTasks = new();
-            foreach(var guild in client.Guilds)
+            foreach (var guild in client.Guilds)
             {
-                downloadTasks.Add(Task.Run(() => { guild.DownloadUsersAsync(); }));
+                downloadTasks.Add(guild.DownloadUsersAsync());
             }
             await Task.WhenAll(downloadTasks);
         }

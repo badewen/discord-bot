@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Bot.Attributes;
 using Discord.Commands;
-using Discord.Rest;
-using Bot.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Bot.Commands.Moderation 
+namespace Bot.Commands.Moderation
 {
     public class Timeout : ModuleBase<SocketCommandContext>
     {
         private const string usage = ".timeout <user>";
         private const string description = "timeout user";
+
         // in progress
         [Command("timeout", RunMode = RunMode.Async)]
         [Alias("mute")]
@@ -29,40 +27,40 @@ namespace Bot.Commands.Moderation
             int Minutes = 0;
             int Hours = 0;
             int Days = 0;
-            foreach (var arg in args) 
+            foreach (var arg in args)
+            {
+                if (!Utils.Isnan(arg) && arg.Length == 18)
                 {
-                    if (!Utils.Isnan(arg) && arg.Length == 18)
+                    ids.Add(Convert.ToUInt64(arg));
+                    continue;
+                }
+                if (arg.EndsWith('s') || arg.EndsWith('m') || arg.EndsWith('d') || arg.EndsWith('h'))
+                {
+                    if (Utils.Isnan(arg.Substring(0, arg.Length - 1)))
                     {
-                        ids.Add(Convert.ToUInt64(arg));
                         continue;
                     }
-                    if (arg.EndsWith('s') || arg.EndsWith('m') || arg.EndsWith('d') || arg.EndsWith('h'))
+                    else
                     {
-                        if (Utils.Isnan(arg.Substring(0,arg.Length-1)))
+                        if (arg.EndsWith('s'))
                         {
-                            continue;
+                            Seconds = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
+                        }
+                        else if (arg.EndsWith('m'))
+                        {
+                            Minutes = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
+                        }
+                        else if (arg.EndsWith('d'))
+                        {
+                            Days = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
                         }
                         else
                         {
-                            if (arg.EndsWith('s'))
-                            {
-                                Seconds = Convert.ToInt32(arg.Substring(0,arg.Length-1));
-                            }
-                            else if (arg.EndsWith('m'))
-                            {
-                                Minutes = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
-                            }
-                            else if (arg.EndsWith('d'))
-                            {
-                                Days = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
-                            }
-                            else
-                            {
-                                Hours = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
-                            }
+                            Hours = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
                         }
                     }
                 }
+            }
             Duration = new(Days, Hours, Minutes, Seconds);
             foreach (var mentioned in Context.Message.MentionedUsers)
             {
@@ -82,7 +80,7 @@ namespace Bot.Commands.Moderation
             }
             await ReplyAsync($"done timeout-ing member \n cant timeout {aboveAuthor} user because above you\n cant timeout {aboveBot} user because above me\n {doesntExist} users doesn't exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
 
-            return ;
+            return;
         }
     }
 }

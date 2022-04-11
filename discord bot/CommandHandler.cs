@@ -1,11 +1,9 @@
-// i have no idea how this class work 
+// i have no idea how this class work
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
-using System.Net.WebSockets;
 using System.Reflection;
 using System.Threading.Tasks;
-using Discord.Rest;
 
 namespace Bot
 {
@@ -15,6 +13,7 @@ namespace Bot
         {
             get;
         }
+
         private readonly CommandService _commandsService;
 
         public CommandHandler(DiscordSocketClient client, CommandService commands)
@@ -39,11 +38,11 @@ namespace Bot
             if (message == null) return;
             int argpos = 0;
             CommandData dCommand = new();
-            if (!(message.HasCharPrefix('.', ref argpos) || message.HasMentionPrefix(Client.CurrentUser, ref argpos)) || message.Author.IsBot || !CommandList.CommandsDic.TryGetValue(message.Content[1..].Split(' ')[0], out dCommand)) return; 
+            if (!(message.HasCharPrefix('.', ref argpos) || message.HasMentionPrefix(Client.CurrentUser, ref argpos)) || message.Author.IsBot || !CommandList.CommandsDic.TryGetValue(message.Content[1..].Split(' ')[0], out dCommand)) return;
             var context = new SocketCommandContext(Client, message);
             if (dCommand.Category == Category.Debug)
             {
-                 var allowed = Program.ClientConfig["debugAllowedUser"].ToObject<string[]>();
+                var allowed = Program.ClientConfig["debugAllowedUser"].ToObject<string[]>();
                 bool found = false;
                 foreach (var i in allowed)
                 {
@@ -58,11 +57,10 @@ namespace Bot
                     return;
                 }
             }
-            var handle =  _commandsService.ExecuteAsync( //magic
+            await _commandsService.ExecuteAsync( //magic
                 context: context,
                 argPos: argpos,
                 services: null);
-            
         }
     }
 }

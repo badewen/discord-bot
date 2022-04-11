@@ -1,6 +1,6 @@
-﻿using Discord;
+﻿using Bot.Attributes;
+using Discord;
 using Discord.Commands;
-using Bot.Attributes;
 using System.Threading.Tasks;
 
 namespace Bot.Commands.Misc
@@ -28,7 +28,7 @@ namespace Bot.Commands.Misc
                 await ReplyAsync(message: "Cant find that command", messageReference: new MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
             }
 
-            return ;
+            return;
         }
     }
 }

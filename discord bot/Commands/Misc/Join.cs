@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Bot.Attributes;
+using Discord;
+using Discord.Audio;
+using Discord.Commands;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Discord.Commands;
-using Discord.Audio;
-using Discord;
-using CliWrap;
-using Bot.Attributes;
 using System.Threading.Tasks;
 
 namespace Bot.Commands.Misc
@@ -17,6 +15,7 @@ namespace Bot.Commands.Misc
     {
         private const string Usage = ".play <youtube link>";
         private const string Description = "play music. will join your channel";
+
         [RequireBotPermission(ChannelPermission.Connect | ChannelPermission.Speak)]
         //[Command("play",RunMode = RunMode.Async)]
         [Usage(Usage)]
@@ -24,7 +23,6 @@ namespace Bot.Commands.Misc
         [Category(Category.Misc)]
         public async Task PlayAsync(string link)
         {
-            
             IVoiceChannel userchannel = Context.Guild.GetUser(Context.Message.Author.Id).VoiceChannel;
             if (userchannel == null)
             {
@@ -46,16 +44,16 @@ namespace Bot.Commands.Misc
             ProcessStartInfo youtubedlInfo = Utils.PrepareYoutubedl("-g " + link);
             Process youtubedlExec = Process.Start(youtubedlInfo);
             output = youtubedlExec.StandardOutput.BaseStream;
-            
+
             // amount of dot for waiting message
             int dot = 1;
-            var message = await Context.Message.Channel.SendMessageAsync($"finding video {String.Concat(Enumerable.Repeat(".",dot))}");
+            var message = await Context.Message.Channel.SendMessageAsync($"finding video {String.Concat(Enumerable.Repeat(".", dot))}");
             while (output.Length == 0)
             {
                 // youtubedl runs for about 2.5 seconds until 4 seconds on my machine
                 // this delay shan't hurt isn't it?
                 await Task.Delay(250);
-                
+
                 await message.ModifyAsync(m =>
                 {
                     if (dot != 3)
@@ -72,7 +70,7 @@ namespace Bot.Commands.Misc
                 });
             }
 
-            if (output.Length == 24 || output.Length == 25) // 25 here is just incase 
+            if (output.Length == 24 || output.Length == 25) // 25 here is just incase
             {
                 await ReplyAsync("Video not found", messageReference: new MessageReference(Context.Message.Id));
                 await output.FlushAsync();
@@ -86,13 +84,13 @@ namespace Bot.Commands.Misc
                 youtubedlInfo = Utils.PrepareYoutubedl(link);
                 youtubedlExec = Process.Start(youtubedlInfo);
                 output = youtubedlExec.StandardOutput.BaseStream;
-                while(output.Length == 0) { await Task.Delay(250); }
+                while (output.Length == 0) { await Task.Delay(250); }
             }
             var client = await userchannel.ConnectAsync();
             var channel = userchannel as Discord.WebSocket.SocketVoiceChannel;
             if (!livestreamlnk)
             {
-                await SendAsync(channel ,client, output.ToString().Split(' ')[1]); //the spliet[1] thing is to get the audio only
+                await SendAsync(channel, client, output.ToString().Split(' ')[1]); //the spliet[1] thing is to get the audio only
             }
             else
             {
@@ -105,7 +103,7 @@ namespace Bot.Commands.Misc
             return;
         }
 
-        private async Task SendAsync(Discord.WebSocket.SocketVoiceChannel channel ,IAudioClient client, string link, Stream input = null)
+        private async Task SendAsync(Discord.WebSocket.SocketVoiceChannel channel, IAudioClient client, string link, Stream input = null)
         {
             ProcessStartInfo ffmpeg = null;
             Process ffmpegExec = null;
@@ -122,7 +120,7 @@ namespace Bot.Commands.Misc
                 }
                 else
                 {
-                    ffmpeg = Utils.PrepareFFmpeg(link,lastSec,lastSec += 15,  stdin: false);
+                    ffmpeg = Utils.PrepareFFmpeg(link, lastSec, lastSec += 15, stdin: false);
                     ffmpegExec = Process.Start(ffmpeg);
                 }
                 Console.WriteLine(link);
@@ -136,7 +134,6 @@ namespace Bot.Commands.Misc
                     {
                         await discord.FlushAsync();
                     }
-
                 }
             } while (ffmpegExec.StandardOutput.BaseStream.Length != 0 || channel.Users.Count > 1);
             return;
@@ -158,7 +155,5 @@ namespace Bot.Commands.Misc
             }
             return String.Empty;
         }
-
-
     }
 }

@@ -9,6 +9,7 @@ namespace Bot.Attributes
         {
             get;
         }
+
         public UsageAttribute(string usage = "No Information is provided")
         {
             Text = usage;

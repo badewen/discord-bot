@@ -1,5 +1,5 @@
-﻿using Discord.Commands;
-using Bot.Attributes;
+﻿using Bot.Attributes;
+using Discord.Commands;
 using System.Threading.Tasks;
 
 namespace Bot.Commands.Fun
@@ -8,6 +8,7 @@ namespace Bot.Commands.Fun
     {
         private const string Usage = ".say <message>";
         private const string Description = "make bot what you want it to say";
+
         [RequireBotPermission(Discord.ChannelPermission.SendMessages)]
         [Command("say")]
         [Usage(Usage)]
@@ -28,7 +29,7 @@ namespace Bot.Commands.Fun
             }
             if (Context.Message.MentionedEveryone) arg = arg.Replace("@everyone", "@‎everyone");
             await ReplyAsync(arg.ToString());
-            return ;
+            return;
         }
     }
 }

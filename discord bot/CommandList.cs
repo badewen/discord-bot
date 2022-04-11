@@ -1,10 +1,10 @@
-﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Bot.Attributes;
 using Discord;
-using Bot.Attributes;
 using Discord.Commands;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Bot
 {
@@ -23,23 +23,27 @@ namespace Bot
         {
             Type[] modules = Assembly.GetEntryAssembly().GetTypes();
             List<Module> commandModules = new();
-            foreach(Type module in modules)
+            foreach (Type module in modules)
             {
                 MethodInfo[] methods = module.GetMethods();
-                foreach(MethodInfo method in methods)
+                foreach (MethodInfo method in methods)
                 {
+                    UsageAttribute usageResult;
+                    DescriptionAttribute descriptionResult;
+                    CategoryAttribute categoryResult;
+
                     if (method.GetCustomAttribute<CommandAttribute>() == null)
                     {
                         continue;
                     }
 
-                    UsageAttribute usageResult = method.GetCustomAttribute<UsageAttribute>();
-                    DescriptionAttribute descriptionResult = method.GetCustomAttribute<DescriptionAttribute>();
-                    CategoryAttribute categoryResult = method.GetCustomAttribute<CategoryAttribute>();
+                    usageResult = method.GetCustomAttribute<UsageAttribute>();
+                    descriptionResult = method.GetCustomAttribute<DescriptionAttribute>();
+                    categoryResult = method.GetCustomAttribute<CategoryAttribute>();
 
-                    string usage ;
+                    string usage;
                     string description;
-                    Category category ;
+                    Category category;
 
                     if (usageResult == null)
                     {
@@ -71,12 +75,15 @@ namespace Bot
                         case Category.Misc:
                             MiscCommands.Add(data);
                             break;
+
                         case Category.Debug:
                             DebugCommands.Add(data);
                             break;
+
                         case Category.Fun:
                             FunCommands.Add(data);
                             break;
+
                         case Category.Moderation:
                             ModerationCommands.Add(data);
                             break;
@@ -124,7 +131,6 @@ namespace Bot
                 commandEmbed.Color = Color.Red;
                 listofcommands.Add(command.CommandClass.Name.ToLower(), commandEmbed.Build());
                 CommandsDic.Add(command.CommandClass.Name.ToLower(), command);
-
             }
             // summary : .help <Category>
             // get and loop through all categories
@@ -162,7 +168,7 @@ namespace Bot
         private static List<CommandData> MiscCommands = new();
         private static List<CommandData> ModerationCommands = new();
         private static List<CommandData> DebugCommands = new();
-        
+
         internal static List<CommandData> Commands = new();
         internal static Dictionary<string, CommandData> CommandsDic = new();
         internal static Dictionary<Category, List<CommandData>> CategoryCommands = new Dictionary<Category, List<CommandData>>();

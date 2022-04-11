@@ -9,6 +9,7 @@ namespace Bot.Attributes
         {
             get;
         }
+
         public DescriptionAttribute(string description = "No description is provided")
         {
             Text = description;

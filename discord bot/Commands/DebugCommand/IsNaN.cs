@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bot;
-using Bot.Attributes;
+﻿using Bot.Attributes;
 using Discord.Commands;
+using System.Threading.Tasks;
 
 namespace Bot.Commands.DebugCommand
 {
@@ -13,6 +8,7 @@ namespace Bot.Commands.DebugCommand
     {
         private const string Usage = ".isnan <ur thing here>";
         private const string Description = "check is NaN?";
+
         [Command("isnan")]
         [Usage(Usage)]
         [Description(Description)]

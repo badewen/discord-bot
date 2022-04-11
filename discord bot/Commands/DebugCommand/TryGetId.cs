@@ -1,7 +1,7 @@
-﻿using System;
-using Bot.Attributes;
-using System.Threading.Tasks;
+﻿using Bot.Attributes;
 using Discord.Commands;
+using System;
+using System.Threading.Tasks;
 
 namespace Bot.Commands.Debug
 {
@@ -9,6 +9,7 @@ namespace Bot.Commands.Debug
     {
         private const string Usage = ".trygetid <user>";
         private const string Description = "get user id";
+
         [Command("trygetid")]
         [Alias("getid")]
         [Usage(Usage)]
@@ -26,7 +27,7 @@ namespace Bot.Commands.Debug
                 return;
             }
             await ReplyAsync("success", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
-            return ;
+            return;
         }
     }
 }

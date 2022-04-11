@@ -1,7 +1,7 @@
-﻿using Discord.Commands;
+﻿using Bot.Attributes;
+using Discord.Commands;
 using System;
 using System.Collections.Generic;
-using Bot.Attributes;
 using System.Threading.Tasks;
 
 namespace Bot.Commands.Moderation
@@ -44,7 +44,7 @@ namespace Bot.Commands.Moderation
             }
             // no need explanation
             foreach (var mentioned in Context.Message.MentionedUsers)
-               filteredIds.Add(mentioned.Id);
+                filteredIds.Add(mentioned.Id);
             // ban time
             foreach (var id in filteredIds)
             {
@@ -55,8 +55,7 @@ namespace Bot.Commands.Moderation
                 await Context.Guild.AddBanAsync(target);
             }
             await ReplyAsync($"done banning member \n {aboveAuthor} cant ban user because above you\n {aboveBot} cant ban user because above me\n {notExists} users doesn't exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
-            
-            
+
             return;
         }
     }

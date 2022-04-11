@@ -1,6 +1,6 @@
 ﻿using Bot.Attributes;
-using System.Threading.Tasks;
 using Discord.Commands;
+using System.Threading.Tasks;
 
 namespace Bot.Commands.DebugCommand
 {
@@ -8,6 +8,7 @@ namespace Bot.Commands.DebugCommand
     {
         private const string Usage = ".sleep <duration(ms)>";
         private const string Description = "sleep";
+
         [Command("sleep", RunMode = RunMode.Async)]
         [Usage(Usage)]
         [Description(Description)]
@@ -16,7 +17,7 @@ namespace Bot.Commands.DebugCommand
         {
             await Task.Delay(duration);
             await ReplyAsync("Done sleeping");
-            return ;
+            return;
         }
     }
 }
