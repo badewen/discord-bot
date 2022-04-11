@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using CliWrap;
@@ -54,34 +56,60 @@ namespace Bot
             a.Remove(a.Length-1);
             return a;
         }
-        public static List<string> Split (string str , char delim)
-        {
-            List<string> token = new();
-            Int32 pos;
-            while((pos = str.IndexOf(delim)) != -1)
-            {
-                token.Add(str.Substring(0,pos));
-                str.Remove(0, pos + 1);
-            }
-            return token;
-        }
+        
         //return message if attribute is not found
+        // ??? what does the comment above me means? 
         public static bool IsNull<T>(T a)
         {
             return a == null;
         }
 
-        public static ProcessStartInfo PrepareFFmpeg(string url)
+        public static ProcessStartInfo PrepareFFmpeg(string url = "", UInt64 from = 0, UInt64 to = 15, bool stdin = true)
         {
-            var ffmpeg = new ProcessStartInfo
+            if (!stdin)
             {
-                FileName  = "ffmpeg",
-                Arguments = $"-hide_banner -loglevel panic -ss 0 -t 20 -i \"{url}\" -ac 2 -f s16le -ar 48000 pipe:1",
+                var ffmpeg = new ProcessStartInfo
+                {
+                    FileName = "ffmpeg",
+                    Arguments =
+                        $"-hide_banner -loglevel panic -ss {from} -t {to} -i \"{url}\" -ac 2 -f s16le -ar 48000 pipe:1",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                };
+                return ffmpeg;
+            }
+            else
+            {
+                var ffmpeg = new ProcessStartInfo
+                {
+                    FileName = "ffmpeg",
+                    Arguments =
+                        $"-hide_banner -loglevel panic -i pipe:  -ac 2 -f s16le -ar 48000 pipe:1",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                };
+                return ffmpeg;
+            }
+        }
+        
+        //youtube link
+        public static bool IsLivestreamLink(string link)
+        {
+            if (link.EndsWith("index.m3u8")) return true;
+            else return false;
+        }
+        
+        public static ProcessStartInfo PrepareYoutubedl(string arg)
+        {
+            return new ProcessStartInfo
+            {
                 RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
+                FileName = "youtube-dl",
+                Arguments = $"{arg} -q -o -",
+                UseShellExecute = false,
             };
-            return ffmpeg;
         }
     }
 }
