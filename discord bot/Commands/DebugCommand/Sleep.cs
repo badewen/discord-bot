@@ -12,7 +12,6 @@ namespace Bot.Commands.DebugCommand
         [Command("sleep", RunMode = RunMode.Async)]
         [Usage(Usage)]
         [Description(Description)]
-        [Category(Category.Debug)]
         public async Task SleepAsync(int duration)
         {
             await Task.Delay(duration);

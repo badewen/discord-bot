@@ -16,7 +16,6 @@ namespace Bot.Commands.Moderation
         [Command("ban")]
         [Usage(Usage)]
         [Description(description)]
-        [Category(Category.Moderation)]
         public async Task BanAsync([Remainder] string arg)
         {
             if (arg.Length == 0)

@@ -1,4 +1,5 @@
-﻿using Bot.Attributes;
+﻿/*
+using Bot.Attributes;
 using Discord;
 using Discord.Audio;
 using Discord.Commands;
@@ -157,3 +158,4 @@ namespace Bot.Commands.Misc
         }
     }
 }
+*/

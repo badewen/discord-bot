@@ -91,13 +91,13 @@ namespace Bot
         }
 
         //youtube link
-        public static bool IsLivestreamLink(string link)
+        /*public static bool IsLivestreamLink(string link)
         {
             if (link.EndsWith("index.m3u8")) return true;
             else return false;
         }
-
-        public static ProcessStartInfo PrepareYoutubedl(string arg)
+        */
+        /*public static ProcessStartInfo PrepareYoutubedl(string arg)
         {
             return new ProcessStartInfo
             {
@@ -107,5 +107,9 @@ namespace Bot
                 UseShellExecute = false,
             };
         }
+        */
+
+
+
     }
 }

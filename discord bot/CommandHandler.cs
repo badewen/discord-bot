@@ -9,37 +9,77 @@ namespace Bot
 {
     public class CommandHandler
     {
-        public DiscordSocketClient Client
-        {
-            get;
-        }
 
         private readonly CommandService _commandsService;
 
-        public CommandHandler(DiscordSocketClient client, CommandService commands)
+        public CommandHandler(CommandService commands)
         {
-            this.Client = client;
             _commandsService = commands;
         }
 
-        public async Task SetupCommandsAsync()
+        public Task SetupCommandsAsync()
         {
-            Client.MessageReceived += HandleCommandAsync;
-            await _commandsService.AddModulesAsync(
+            Program.client.MessageReceived += HandleCommandAsync;
+             _commandsService.AddModulesAsync(
                 assembly: Assembly.GetEntryAssembly(),
                 services: null);
+            return Task.CompletedTask;
         }
 
         private async Task HandleCommandAsync(SocketMessage arg)
         {
+
             Console.WriteLine($"{arg.Author.Username}#{arg.Author.Username} : {arg.Content}");
 
             SocketUserMessage message = arg as SocketUserMessage;
+
+            if (message.Author.IsBot) return;
             if (message == null) return;
-            int argpos = 0;
-            CommandData dCommand = new();
-            if (!(message.HasCharPrefix('.', ref argpos) || message.HasMentionPrefix(Client.CurrentUser, ref argpos)) || message.Author.IsBot || !CommandList.CommandsDic.TryGetValue(message.Content[1..].Split(' ')[0], out dCommand)) return;
-            var context = new SocketCommandContext(Client, message);
+            if (message.Content.Substring(0, Program.PREFIX.Length) != Program.PREFIX) return;
+            
+            // note: d doesnt mean anything. i ran out of names
+            int argpos = Program.PREFIX.Length;
+            CommandData dCommand;
+            string InvokedCommand = message.Content.Trim();
+            {
+                int pos = InvokedCommand.IndexOf(' ');
+                // only prefix and command
+                if (pos == -1)
+                {
+                    InvokedCommand = InvokedCommand[Program.PREFIX.Length..];
+                }
+                // contain args
+                else
+                {
+                    InvokedCommand = InvokedCommand[Program.PREFIX.Length..new Index(pos)];
+                }
+            }
+            var context = new SocketCommandContext(Program.client, message);
+
+            if (!CommandList.CommandsDic.TryGetValue(InvokedCommand, out dCommand))
+            {
+                await context.Channel.SendMessageAsync(text : "invalid command", messageReference: context.Message.Reference);
+                return;
+            }
+
+            if (!Cooldown.IsUserExist(InvokedCommand, message.Author.Id))
+            {
+                Cooldown.AddUser(InvokedCommand, message.Author.Id);
+            }
+            else
+            {
+                (bool done, UInt64 secPassed) = Cooldown.IsCooldownDone(dCommand.CooldownSec, InvokedCommand, message.Author.Id);
+                if (!done)
+                {
+                    await context.Channel.SendMessageAsync($"that command is on cooldown try again in {dCommand.CooldownSec - secPassed}s", messageReference: new Discord.MessageReference(message.Id, message.Channel.Id, context.Guild.Id));
+                    return;
+                }
+                else
+                {
+                    Cooldown.UpdateUserCooldown(InvokedCommand, message.Author.Id);
+                }
+            }
+
             if (dCommand.Category == Category.Debug)
             {
                 var allowed = Program.ClientConfig["debugAllowedUser"].ToObject<string[]>();

@@ -18,7 +18,6 @@ namespace Bot.Commands.Moderation
         [Command("purge")]
         [Usage(usage)]
         [Description(description)]
-        [Category(Category.Moderation)]
         public async Task PurgeAsync(string message)
         {
             int amount;

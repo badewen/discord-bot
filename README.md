@@ -10,7 +10,7 @@
 for windows user the libsodium and opus download link are [here](https://github.com/discord-net/Discord.Net/tree/dev/voice-natives) <br/>
 not windows user? compile it your self [Sodium](https://download.libsodium.org/libsodium/releases/) and [Opus](http://downloads.xiph.org/releases/opus/)<br/>
 -->
-dicord net labs <br/>
+dicord net<br/>
 for flex <br/>
 [![CodeFactor](https://www.codefactor.io/repository/github/badewen/discord-bot/badge/master)](https://www.codefactor.io/repository/github/badewen/discord-bot/overview/master) <br/>
 status : not under active development (school is back open) <br/>

@@ -4,22 +4,44 @@ using Discord.Commands;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace Bot
 {
     public class CommandList
     {
-        internal static Task PrepareCategories()
+        internal static void RegisterCommandListCategories()
         {
             CategoryCommands.Add(Category.Fun, FunCommands);
             CategoryCommands.Add(Category.Misc, MiscCommands);
             CategoryCommands.Add(Category.Moderation, ModerationCommands);
             CategoryCommands.Add(Category.Debug, DebugCommands);
-            return Task.CompletedTask;
         }
 
-        internal static Task RegisterAllCommands()
+        internal static void RegisterCommandsCategories()
+        {
+            foreach(CommandData data in Commands)
+            {
+                if (data.Category == Category.Debug)
+                {
+                    DebugCommands.Add(data);
+                }
+                else if (data.Category == Category.Misc)
+                {
+                    MiscCommands.Add(data);
+                }
+                else if (data.Category == Category.Fun)
+                {
+                    FunCommands.Add(data);
+                }
+                else if (data.Category == Category.Moderation)
+                {
+                    ModerationCommands.Add(data);
+                }
+            }
+        }
+
+        internal static void RegisterAllCommands()
         {
             Type[] modules = Assembly.GetEntryAssembly().GetTypes();
             List<Module> commandModules = new();
@@ -30,7 +52,7 @@ namespace Bot
                 {
                     UsageAttribute usageResult;
                     DescriptionAttribute descriptionResult;
-                    CategoryAttribute categoryResult;
+                    CooldownAttribute cooldownResult;
 
                     if (method.GetCustomAttribute<CommandAttribute>() == null)
                     {
@@ -39,11 +61,12 @@ namespace Bot
 
                     usageResult = method.GetCustomAttribute<UsageAttribute>();
                     descriptionResult = method.GetCustomAttribute<DescriptionAttribute>();
-                    categoryResult = method.GetCustomAttribute<CategoryAttribute>();
+                    cooldownResult = method.GetCustomAttribute<CooldownAttribute>();
 
                     string usage;
                     string description;
-                    Category category;
+                    Category category = Category.Misc;
+                    UInt64 sec;
 
                     if (usageResult == null)
                     {
@@ -61,41 +84,42 @@ namespace Bot
                     {
                         description = descriptionResult.Text;
                     }
-                    if (categoryResult == null)
+                    if (cooldownResult == null)
                     {
-                        category = Category.Misc;
+                        sec = 0;
                     }
                     else
                     {
-                        category = categoryResult.category;
+                        sec = cooldownResult.sec;
                     }
-                    CommandData data = new CommandData(usage, description, method.Name, module, category);
-                    switch (category)
+                    
+                    // get the category
+                    string namespaceName = module.Namespace.ToLower();;
                     {
-                        case Category.Misc:
-                            MiscCommands.Add(data);
-                            break;
-
-                        case Category.Debug:
-                            DebugCommands.Add(data);
-                            break;
-
-                        case Category.Fun:
-                            FunCommands.Add(data);
-                            break;
-
-                        case Category.Moderation:
-                            ModerationCommands.Add(data);
-                            break;
+                        Int32 dotPos;
+                        dotPos = (Int32)namespaceName.LastIndexOf('.');
+                        
+                        string categoryName = namespaceName[new System.Index(dotPos)..];
+                        bool found = false;
+                        foreach((string key, Category value) in CategoryTable.Table){
+                            if (categoryName.Contains(key.ToLower()))
+                            {
+                                found = true;
+                                category = value;
+                            }
+                        }
+                        if(!found){
+                            category = Category.Misc;
+                        }
                     }
-
+                    
+                    CommandData data = new CommandData(usage, description, method.Name, module, category, sec);
                     Commands.Add(data);
                 }
             }
-            return Task.CompletedTask;
         }
 
-        internal static Task BuildCommandsEmbed()
+        internal static void BuildCommandsEmbed()
         {   //going to rarely touch this spaghethet code
             {
                 var commandCategory = new EmbedBuilder();
@@ -107,26 +131,31 @@ namespace Bot
                     .Color = Color.Red;
                 listofcommands.Add("default", commandCategory.Build());// defualt peag cnotains categoirs
             }
-            foreach (var command in Commands)
+            foreach (CommandData command in Commands)
             {
                 // get all the alias
                 var aliases = (AliasAttribute)Attribute.GetCustomAttribute(command.CommandClass.GetMethod(command.CommandMethodName), typeof(AliasAttribute));
+                
+                StringBuilder stringaliasesbuilder = new();
+
                 // representable list of aliases
                 string stringaliases = "";
                 var commandEmbed = new EmbedBuilder();
                 commandEmbed.AddField("Command", command.CommandClass.Name)
                              .AddField("Description", command.Description)
-                             .AddField("Usage", command.Usage);
+                             .AddField("Usage", command.Usage)
+                             .AddField("Cooldown", command.CooldownSec);
                 if (aliases != null)
                 {
                     // appending or adding aliases to stringaliases
                     foreach (var alias in aliases.Aliases)
                     {
-                        stringaliases += " , ";
-                        stringaliases += alias;
+                        stringaliasesbuilder.Append(" , ");
+                        stringaliasesbuilder.Append(alias);
                         CommandsDic.Add(alias.ToLower(), command);
                     }
                 }
+                stringaliases = stringaliasesbuilder.ToString();
                 commandEmbed.AddField("Aliases", command.CommandClass.Name + stringaliases);
                 commandEmbed.Color = Color.Red;
                 listofcommands.Add(command.CommandClass.Name.ToLower(), commandEmbed.Build());
@@ -147,7 +176,7 @@ namespace Bot
                     conter++;
                     if (conter % 2 == 0)
                     {
-                        commandCategoryString += ",";
+                        commandCategoryString += ", ";
                         conter = 1;
                     }
                     commandCategoryString += command.CommandClass.Name;
@@ -159,8 +188,6 @@ namespace Bot
                 // get enumCategory name and adding embed
                 listofcommands.Add(enumCategory.ToString().ToLower(), embed.Build());
             }
-
-            return Task.CompletedTask;
         }
 
         public static Dictionary<string, Embed> listofcommands = new();

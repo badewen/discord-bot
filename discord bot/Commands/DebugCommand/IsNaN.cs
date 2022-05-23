@@ -1,6 +1,7 @@
 ﻿using Bot.Attributes;
 using Discord.Commands;
 using System.Threading.Tasks;
+using System;
 
 namespace Bot.Commands.DebugCommand
 {
@@ -12,11 +13,9 @@ namespace Bot.Commands.DebugCommand
         [Command("isnan")]
         [Usage(Usage)]
         [Description(Description)]
-        [Category(Category.Debug)]
         public async Task IsNaNAsync(string arg)
         {
             await Context.Channel.SendMessageAsync(Utils.Isnan(arg).ToString());
-
             return;
         }
     }

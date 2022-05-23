@@ -13,7 +13,6 @@ namespace Bot.Commands.Fun
         [Command("say")]
         [Usage(Usage)]
         [Description(Description)]
-        [Category(Category.Fun)]
         public async Task SayAsync([Remainder] string message)
         {
             var arg = message;

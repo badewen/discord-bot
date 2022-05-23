@@ -13,7 +13,6 @@ namespace Bot.Commands.Misc
         [Command("help")]
         [Usage(Usage)]
         [Description(Description)]
-        [Category(Category.Misc)]
         public async Task HelpAsync(string arg = "default")
         {
             // very proud of this code very "clean"

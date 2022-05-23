@@ -16,38 +16,43 @@ namespace Bot
         private static CommandServiceConfig CommandServiceConfig = new CommandServiceConfig();
         private static readonly CommandService commandService = new();
         public static CommandHandler commandHandler;
+        public static readonly string PREFIX = ".";
         public static readonly JObject ClientConfig = JObject.Parse(File.ReadAllText(@"./config.json"));
 
         private static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
 
         public async Task MainAsync()
         {
+            Console.WriteLine(ClientConfig["token"].ToString());
             discordConfig.GatewayIntents = (GatewayIntents)32447;
             client = new DiscordSocketClient(discordConfig);
+            CommandServiceConfig.CaseSensitiveCommands = false;
             client.Log += Log;
-            client.Ready += OnReady;
             await client.LoginAsync(TokenType.Bot, ClientConfig["token"].ToString());
+            client.Ready += OnReady;
             await client.StartAsync();
             await Task.Delay(-1);
         }
 
         private async Task OnReady()
         {
-            CommandServiceConfig.CaseSensitiveCommands = false;
-            commandHandler = new CommandHandler(client, commandService);
-            await commandHandler.SetupCommandsAsync(); // class command cons called
-            await CommandList.RegisterAllCommands();
-            await CommandList.PrepareCategories();
-            await CommandList.BuildCommandsEmbed();
+            List<Task> allTasks = new();
+            commandHandler = new CommandHandler(commandService);
+            allTasks.Add(commandHandler.SetupCommandsAsync()); 
+            CategoryTable.Init();
+            CommandList.RegisterAllCommands();
+            CommandList.RegisterCommandsCategories();
+            CommandList.RegisterCommandListCategories();
+            CommandList.BuildCommandsEmbed();
+            Cooldown.PrepareCooldown();
             Console.WriteLine($"{client.CurrentUser} is ready");
-            await client.SetGameAsync(".help");
+            allTasks.Add(client.SetGameAsync(".help"));
 
-            List<Task> downloadTasks = new();
             foreach (var guild in client.Guilds)
             {
-                downloadTasks.Add(guild.DownloadUsersAsync());
+                allTasks.Add(guild.DownloadUsersAsync());
             }
-            await Task.WhenAll(downloadTasks);
+            await Task.WhenAll(allTasks);
         }
 
         private Task Log(LogMessage message)

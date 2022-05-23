@@ -7,6 +7,9 @@
 config.json
 *.rsuser
 *.suo
+Dependencies
+.idea
+New OpenDocument Drawing.odg
 *.user
 *.userosscache
 *.sln.docstates

@@ -16,7 +16,6 @@ namespace Bot.Commands.Moderation
         [Alias("mute")]
         [Usage(usage)]
         [Description(description)]
-        [Category(Category.Moderation)]
         public async Task TimeoutAsync([Remainder] string input)
         {
             await Context.Guild.DownloadUsersAsync();
