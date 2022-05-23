@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Bot.Attributes;
 using System.Collections.Generic;
 using System;
-using Bot;
 
 namespace Bot.Commands.DebugCommand
 {
