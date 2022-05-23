@@ -1,5 +1,5 @@
 {
-  "prefix": ".", // bot prefix
+  //"prefix": ".", // totally useless. edit "public static readonly string PREFIX = "."" in the program.cs into  public static readonly string PREFIX = "<your preferred prefix here>".
   "token": "<replace>", // your bot token
   "debugAllowedUser": [ "<replace>" ] // array of users id . allow users with the id run debug commands
 }
