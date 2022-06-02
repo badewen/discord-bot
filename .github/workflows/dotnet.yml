@@ -12,6 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps: 
+    
+    - name: prepare-artifact-output
+      run: |
+        mkdir out
+        cd out
+    
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -23,3 +29,14 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+  
+    - name: cleanup
+      run: cd ..
+      
+    - name: upload-artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: out
+      
+      
+      
