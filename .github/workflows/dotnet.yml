@@ -13,12 +13,12 @@ jobs:
 
     steps: 
     
-    - name: prepare-artifact-output
-      run: |
-        mkdir downloads
-        cd downloads
-    
     - uses: actions/checkout@v2
+    
+    - run: | 
+        mkdir -p ./artifact
+        cd ./artifact
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -29,14 +29,15 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-  
+      
     - name: cleanup
       run: cd ..
       
     - name: upload-artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
-        path: downloads
+        name: bin
+        path: ./artifact
       
       
       
