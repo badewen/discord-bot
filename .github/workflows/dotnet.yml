@@ -15,8 +15,8 @@ jobs:
     
     - name: prepare-artifact-output
       run: |
-        mkdir out
-        cd out
+        mkdir downloads
+        cd downloads
     
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -36,7 +36,7 @@ jobs:
     - name: upload-artifact
       uses: actions/upload-artifact@v2
       with:
-        path: out
+        path: downloads
       
       
       
