@@ -33,6 +33,29 @@ namespace Bot
             return false;
         }
 
+        public static bool Isnan(ReadOnlySpan<char> str)
+        {
+            if (str == null || str.Length <= 0)
+            {
+                return true;
+            }
+
+            foreach(char c in str)
+            {
+                bool found = false;
+                foreach(char num in Nums)
+                {
+                    if (c == num)
+                    {
+                        found = true;
+                        continue;
+                    }
+                }
+                if (!found) return true;
+            }
+            return false;
+        }
+
         public static bool isHigher(IGuild guild, IUser author, ulong target)
         {
             var authorHierarchy = guild.GetUserAsync(author.Id).Result.Hierarchy;
@@ -60,55 +83,42 @@ namespace Bot
             return a == null;
         }
 
-        public static ProcessStartInfo PrepareFFmpeg(string url = "", UInt64 from = 0, UInt64 to = 15, bool stdin = true)
+        public static (int, char) ParseDuration(ReadOnlySpan<char> duration)
         {
-            if (!stdin)
+
+            char end = duration[duration.Length - 1];
+            
+            if (end == 's' || end == 'S' || end == 'h' || end == 'H' || end == 'd' || end == 'D')
             {
-                var ffmpeg = new ProcessStartInfo
+                if(Isnan(duration.Slice(0, duration.Length - 1)))
                 {
-                    FileName = "ffmpeg",
-                    Arguments =
-                        $"-hide_banner -loglevel panic -ss {from} -t {to} -i \"{url}\" -ac 2 -f s16le -ar 48000 pipe:1",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false
-                };
-                return ffmpeg;
+                    return (-1, 'e');
+                }
+                // now that we have sanitized everything, it's safe to assume that it's going to be a number
+                else
+                {
+                    if (end == 's' || end == 'S')
+                    {
+                        return (Convert.ToInt32(duration.Slice(0, duration.Length - 1).ToString()), 's');
+                    }
+                    else if (end == 'h' || end == 'H')
+                    {
+                        return (Convert.ToInt32(duration.Slice(0, duration.Length - 1).ToString()), 'h');
+                    }
+                    else if (end == 'd' || end == 'D')
+                    {
+                        return (Convert.ToInt32(duration.Slice(0, duration.Length - 1).ToString()), 'd');
+                    }
+                }
+
             }
             else
             {
-                var ffmpeg = new ProcessStartInfo
-                {
-                    FileName = "ffmpeg",
-                    Arguments =
-                        $"-hide_banner -loglevel panic -i pipe:  -ac 2 -f s16le -ar 48000 pipe:1",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false
-                };
-                return ffmpeg;
+                return (-1, 'e');     
             }
+            // there is no way this code is reached
+            return (-1, 'e');
         }
-
-        //youtube link
-        /*public static bool IsLivestreamLink(string link)
-        {
-            if (link.EndsWith("index.m3u8")) return true;
-            else return false;
-        }
-        */
-        /*public static ProcessStartInfo PrepareYoutubedl(string arg)
-        {
-            return new ProcessStartInfo
-            {
-                RedirectStandardOutput = true,
-                FileName = "youtube-dl",
-                Arguments = $"{arg} -q -o -",
-                UseShellExecute = false,
-            };
-        }
-        */
-
 
 
     }

@@ -10,14 +10,14 @@ namespace Bot.Commands.Moderation
 {
     public class Purge : ModuleBase<SocketCommandContext>
     {
-        private const string usage = ".purge <1-100>";
-        private const string description = "delete message \n note: this only delete message that is less than 14 days old";
+        private const string _usage = ".purge <1-100>";
+        private const string _description = "delete message \n note: this only delete message that is less than 14 days old";
 
         [RequireUserPermission(Discord.GuildPermission.ManageMessages)]
         [RequireBotPermission(Discord.ChannelPermission.ManageMessages)]
         [Command("purge")]
-        [Usage(usage)]
-        [Description(description)]
+        [Usage(_usage)]
+        [Description(_description)]
         public async Task PurgeAsync(string message)
         {
             int amount;
@@ -30,7 +30,7 @@ namespace Bot.Commands.Moderation
 
             List<Discord.IMessage> messages = new();
 
-            var idk = Context.Channel.GetMessagesAsync(fromMessage: Context.Message, Discord.Direction.Before, limit: amount).ToListAsync().Result;
+            var idk = await Context.Channel.GetMessagesAsync(fromMessage: Context.Message, Discord.Direction.Before, limit: amount).ToListAsync();
             foreach (var c in idk)
             {
                 foreach (var f in c)

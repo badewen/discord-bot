@@ -9,6 +9,7 @@ namespace Bot.Commands.DebugCommand
     
     public class test : ModuleBase<SocketCommandContext>
     {
+        [Cooldown(20)]
         [Command("test")]
         public Task testAsync()
         {

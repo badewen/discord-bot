@@ -12,32 +12,21 @@ namespace Bot
     {
         internal static void RegisterCommandListCategories()
         {
-            CategoryCommands.Add(Category.Fun, FunCommands);
-            CategoryCommands.Add(Category.Misc, MiscCommands);
-            CategoryCommands.Add(Category.Moderation, ModerationCommands);
-            CategoryCommands.Add(Category.Debug, DebugCommands);
+            _initCommandCategoriesDic();
+            foreach(var category in Enum.GetValues<Category>())
+            {
+                CategoryCommands.Add(category, (CommandCategoriesDic["_" + Enum.GetName<Category>(category).ToLower() + "Commands"]));
+            }
         }
+
 
         internal static void RegisterCommandsCategories()
         {
             foreach(CommandData data in Commands)
             {
-                if (data.Category == Category.Debug)
-                {
-                    DebugCommands.Add(data);
-                }
-                else if (data.Category == Category.Misc)
-                {
-                    MiscCommands.Add(data);
-                }
-                else if (data.Category == Category.Fun)
-                {
-                    FunCommands.Add(data);
-                }
-                else if (data.Category == Category.Moderation)
-                {
-                    ModerationCommands.Add(data);
-                }
+                String categoryName = Enum.GetName<Category>(data.Category);
+                categoryName = categoryName.ToLower();
+                CommandCategoriesDic["_" + categoryName + "Commands"].Add(data);
             }
         }
 
@@ -190,11 +179,20 @@ namespace Bot
             }
         }
 
+        private static void _initCommandCategoriesDic()
+        {
+            CommandCategoriesDic.Add(nameof(_funCommands), _funCommands);
+            CommandCategoriesDic.Add(nameof(_miscCommands), _miscCommands);
+            CommandCategoriesDic.Add(nameof(_moderationCommands), _moderationCommands);
+            CommandCategoriesDic.Add(nameof(_debugCommands), _debugCommands);
+        }
+
         public static Dictionary<string, Embed> listofcommands = new();
-        private static List<CommandData> FunCommands = new();
-        private static List<CommandData> MiscCommands = new();
-        private static List<CommandData> ModerationCommands = new();
-        private static List<CommandData> DebugCommands = new();
+        public static Dictionary<string, List<CommandData>> CommandCategoriesDic = new();
+        private static List<CommandData> _funCommands = new();
+        private static List<CommandData> _miscCommands = new();
+        private static List<CommandData> _moderationCommands = new();
+        private static List<CommandData> _debugCommands = new();
 
         internal static List<CommandData> Commands = new();
         internal static Dictionary<string, CommandData> CommandsDic = new();

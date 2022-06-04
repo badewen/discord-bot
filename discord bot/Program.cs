@@ -41,8 +41,9 @@ namespace Bot
             allTasks.Add(commandHandler.SetupCommandsAsync()); 
             CategoryTable.Init();
             CommandList.RegisterAllCommands();
-            CommandList.RegisterCommandsCategories();
+            //oh god im confused
             CommandList.RegisterCommandListCategories();
+            CommandList.RegisterCommandsCategories();
             CommandList.BuildCommandsEmbed();
             Cooldown.PrepareCooldown();
             Console.WriteLine($"{client.CurrentUser} is ready");

@@ -8,24 +8,26 @@ namespace Bot.Commands.Moderation
 {
     public class Timeout : ModuleBase<SocketCommandContext>
     {
-        private const string usage = ".timeout <user>";
-        private const string description = "timeout user";
+        private const string _usage = ".timeout <user>";
+        private const string _description = "timeout user";
 
         // in progress
         [Command("timeout", RunMode = RunMode.Async)]
         [Alias("mute")]
-        [Usage(usage)]
-        [Description(description)]
+        [Usage(_usage)]
+        [Description(_description)]
         public async Task TimeoutAsync([Remainder] string input)
         {
-            await Context.Guild.DownloadUsersAsync();
+            Console.WriteLine("im invoked");
+            List<Task> timeoutTasks = new();
+            var downloadTask = Context.Guild.DownloadUsersAsync();
             string[] args = input.Split(' ');
             List<ulong> ids = new();
-            TimeSpan Duration;
-            int Seconds = 10;
-            int Minutes = 0;
-            int Hours = 0;
-            int Days = 0;
+            TimeSpan duration;
+            int seconds = 0;
+            int minutes = 0;
+            int hours = 0;
+            int days = 0;
             foreach (var arg in args)
             {
                 if (!Utils.Isnan(arg) && arg.Length == 18)
@@ -33,34 +35,32 @@ namespace Bot.Commands.Moderation
                     ids.Add(Convert.ToUInt64(arg));
                     continue;
                 }
-                if (arg.EndsWith('s') || arg.EndsWith('m') || arg.EndsWith('d') || arg.EndsWith('h'))
+                (int parsed, char durT) = Utils.ParseDuration(arg.AsSpan());  
+                
+                if (durT == 'e')
                 {
-                    if (Utils.Isnan(arg.Substring(0, arg.Length - 1)))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        if (arg.EndsWith('s'))
-                        {
-                            Seconds = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
-                        }
-                        else if (arg.EndsWith('m'))
-                        {
-                            Minutes = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
-                        }
-                        else if (arg.EndsWith('d'))
-                        {
-                            Days = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
-                        }
-                        else
-                        {
-                            Hours = Convert.ToInt32(arg.Substring(0, arg.Length - 1));
-                        }
-                    }
+                    continue;
+                }
+                else if (durT == 's')
+                {
+                    seconds = parsed;
+                }
+                else if (durT == 'h')
+                {
+                    hours = parsed;
+                }
+                else if (durT == 'd')
+                {
+                    days = parsed;
                 }
             }
-            Duration = new(Days, Hours, Minutes, Seconds);
+
+            if (seconds == 0 && hours == 0 && days == 0)
+            {
+                seconds = 10;
+            }
+
+            duration = new(days, hours, minutes, seconds);
             foreach (var mentioned in Context.Message.MentionedUsers)
             {
                 ids.Add(mentioned.Id);
@@ -68,15 +68,17 @@ namespace Bot.Commands.Moderation
             int aboveAuthor = 0;
             int aboveBot = 0;
             int doesntExist = 0;
+            await downloadTask;
             foreach (var id in ids)
             {
                 Discord.WebSocket.SocketGuildUser target = Context.Guild.GetUser(id);
                 if (target == null) { doesntExist++; continue; }
                 if (!Utils.isHigher(Context.Guild, Context.User, id)) { aboveAuthor++; continue; }
                 if (!Utils.isHigher(Context.Guild, Program.client.CurrentUser, id)) { aboveBot++; continue; }
-                await target.SetTimeOutAsync(Duration);
-                Console.WriteLine($"{target.Username} timeouted for {Duration.Days}D , {Duration.Hours}H, {Duration.Minutes}M, {Duration.Seconds}S");
+                timeoutTasks.Add(target.SetTimeOutAsync(duration));
+                Console.WriteLine($"{target.Username} timeouted for {duration.Days}D , {duration.Hours}H, {duration.Minutes}M, {duration.Seconds}S");
             }
+            await Task.WhenAll(timeoutTasks);
             await ReplyAsync($"done timeout-ing member \n cant timeout {aboveAuthor} user because above you\n cant timeout {aboveBot} user because above me\n {doesntExist} users doesn't exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
 
             return;

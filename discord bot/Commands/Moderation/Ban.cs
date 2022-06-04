@@ -8,14 +8,15 @@ namespace Bot.Commands.Moderation
 {
     public class Ban : ModuleBase<SocketCommandContext>
     {
-        private const string Usage = ".ban <id / mention>";
-        private const string description = "ban people";
+        private const string _usage = ".ban <id / mention>";
+        private const string _description = "ban people";
+
 
         [RequireBotPermission(Discord.GuildPermission.BanMembers)]
         [RequireUserPermission(Discord.GuildPermission.BanMembers)]
         [Command("ban")]
-        [Usage(Usage)]
-        [Description(description)]
+        [Usage(_usage)]
+        [Description(_description)]
         public async Task BanAsync([Remainder] string arg)
         {
             if (arg.Length == 0)
@@ -24,7 +25,7 @@ namespace Bot.Commands.Moderation
                 return;
             }
 
-            await Context.Guild.DownloadUsersAsync();
+            var downloadTask = Context.Guild.DownloadUsersAsync();
             var author = Context.Guild.GetUser(Context.User.Id);
             var bot = Context.Guild.GetUser(Program.client.CurrentUser.Id);
             int notExists = 0;      //---|
@@ -44,6 +45,9 @@ namespace Bot.Commands.Moderation
             // no need explanation
             foreach (var mentioned in Context.Message.MentionedUsers)
                 filteredIds.Add(mentioned.Id);
+
+            List<Task> banTask = new();
+            await downloadTask;
             // ban time
             foreach (var id in filteredIds)
             {
@@ -51,10 +55,10 @@ namespace Bot.Commands.Moderation
                 if (target == null) { notExists++; continue; }
                 if (target.Hierarchy >= author.Hierarchy) { aboveAuthor++; continue; }
                 if (target.Hierarchy >= bot.Hierarchy) { aboveBot++; continue; }
-                await Context.Guild.AddBanAsync(target);
+                banTask.Add(Context.Guild.AddBanAsync(target));
             }
+            await Task.WhenAll(banTask);
             await ReplyAsync($"done banning member \n {aboveAuthor} cant ban user because above you\n {aboveBot} cant ban user because above me\n {notExists} users doesn't exist", messageReference: new Discord.MessageReference(Context.Message.Id, Context.Channel.Id, Context.Guild.Id));
-
             return;
         }
     }
