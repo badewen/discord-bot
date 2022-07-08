@@ -1,5 +1,26 @@
 {
   //"prefix": ".", // totally useless. edit "public static readonly string PREFIX = "."" in the program.cs into  public static readonly string PREFIX = "<your preferred prefix here>".
-  "token": "<replace>", // your bot token
-  "debugAllowedUser": [ "<replace>" ] // array of users id . allow users with the id run debug commands
+  "token": "REPLACEME", // your bot token
+  "debugAllowedUser": [ "REPLACEME" ], // array of users id . allow users with the id run debug commands
+  //connect4 uses emoji so specify the name
+  //note: the bot must be in the same server as your emoji in
+  "connect4": {
+    //all the emoji name
+    //format = <emoji name> + : + <emoji id> 
+    //note: emoji id can be obtained by adding backslash into the beginning of the emoji like this "\:TileYellow:"
+    //note: if you are lazy or dont want to create an emoji from scratch, you can use pngs from assets folder.
+    //MODIFY ALL OF THE VALUE BELOW OR IT WONT WORK. TileEmpty's DEFAULT VALUE ONLY SERVE AS AN EXAMPLE
+    "TileEmpty": "TileYellow:994497235272347718", 
+    "TileYellow": "",
+    "TileRed": "",
+    "TileNumber1": "",
+    "TileNumber2": "",
+    "TileNumber3": "",
+    "TileNumber4": "",
+    "TileNumber5": "",
+    "TileNumber6": "",
+    "TileNumber7": "",
+    "TileRedWin": "",
+    "TileYellowWin": "",
+  }
 }
