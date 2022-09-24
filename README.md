@@ -13,5 +13,5 @@ not windows user? compile it your self [Sodium](https://download.libsodium.org/l
 dicord net<br/>
 for flex <br/>
 [![CodeFactor](https://www.codefactor.io/repository/github/badewen/discord-bot/badge/master)](https://www.codefactor.io/repository/github/badewen/discord-bot/overview/master) <br/>
-status : not under active development (school is back open) <br/>
+status : frozen (i got no time) <br/>
 
